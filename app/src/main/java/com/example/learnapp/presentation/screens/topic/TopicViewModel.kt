@@ -1,21 +1,19 @@
 package com.example.learnapp.presentation.screens.topic
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.learnapp.LearnApp
-import com.example.learnapp.domain.model.Lesson
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 import com.example.learnapp.domain.usecase.GetTopicByIdUseCase
 import com.example.learnapp.domain.usecase.ObserveProgressUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 data class TopicDetailUiState(
     val topic: Topic? = null,
@@ -23,11 +21,14 @@ data class TopicDetailUiState(
     val isLoading: Boolean = true
 )
 
-class TopicViewModel(
-    private val topicId: String,
+@HiltViewModel
+class TopicViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getTopicById: GetTopicByIdUseCase,
     private val observeProgress: ObserveProgressUseCase
 ) : ViewModel() {
+
+    private val topicId: String = checkNotNull(savedStateHandle["topicId"])
 
     val uiState: StateFlow<TopicDetailUiState> = combine(
         flow { emit(getTopicById(topicId)) },
@@ -40,16 +41,5 @@ class TopicViewModel(
         initialValue = TopicDetailUiState()
     )
 
-    companion object {
-        fun factory(topicId: String, app: LearnApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TopicViewModel(
-                    topicId = topicId,
-                    getTopicById = app.container.getTopicById,
-                    observeProgress = app.container.observeProgress
-                )
-            }
-        }
-    }
 }
 

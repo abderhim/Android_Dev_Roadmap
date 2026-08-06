@@ -1,14 +1,21 @@
 package com.example.learnapp.presentation.navigation
 
-object Screen {
-    const val HOME = "home"
-    const val PROGRESS = "progress"
-    const val TOPIC = "topic/{topicId}"
-    const val LESSON = "lesson/{lessonId}"
-    const val QUIZ = "quiz/{lessonId}"
+import kotlinx.serialization.Serializable
 
-    fun topicRoute(topicId: String) = "topic/$topicId"
-    fun lessonRoute(lessonId: String) = "lesson/$lessonId"
-    fun quizRoute(lessonId: String) = "quiz/$lessonId"
+sealed interface Screen {
+    @Serializable
+    data object Home : Screen
+
+    @Serializable
+    data object Progress : Screen
+
+    @Serializable
+    data class TopicDetail(val topicId: String) : Screen
+
+    @Serializable
+    data class Lesson(val lessonId: String) : Screen
+
+    @Serializable
+    data class Quiz(val lessonId: String) : Screen
 }
 

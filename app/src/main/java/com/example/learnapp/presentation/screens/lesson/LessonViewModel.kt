@@ -1,15 +1,13 @@
 package com.example.learnapp.presentation.screens.lesson
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Lesson
 import com.example.learnapp.domain.usecase.GetLessonByIdUseCase
 import com.example.learnapp.domain.usecase.MarkLessonCompleteUseCase
 import com.example.learnapp.domain.usecase.ObserveProgressUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class LessonUiState(
     val lesson: Lesson? = null,
@@ -25,12 +24,15 @@ data class LessonUiState(
     val showCodeExample: Boolean = false
 )
 
-class LessonViewModel(
-    private val lessonId: String,
+@HiltViewModel
+class LessonViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getLessonById: GetLessonByIdUseCase,
     private val markLessonComplete: MarkLessonCompleteUseCase,
     private val observeProgress: ObserveProgressUseCase
 ) : ViewModel() {
+
+    private val lessonId: String = checkNotNull(savedStateHandle["lessonId"])
 
     private val _showCode = MutableStateFlow(false)
 
@@ -59,17 +61,5 @@ class LessonViewModel(
         viewModelScope.launch { markLessonComplete(lessonId) }
     }
 
-    companion object {
-        fun factory(lessonId: String, app: LearnApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                LessonViewModel(
-                    lessonId = lessonId,
-                    getLessonById = app.container.getLessonById,
-                    markLessonComplete = app.container.markLessonComplete,
-                    observeProgress = app.container.observeProgress
-                )
-            }
-        }
-    }
 }
 

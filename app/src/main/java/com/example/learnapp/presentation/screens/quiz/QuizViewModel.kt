@@ -1,19 +1,18 @@
 package com.example.learnapp.presentation.screens.quiz
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Question
 import com.example.learnapp.domain.usecase.GetLessonByIdUseCase
 import com.example.learnapp.domain.usecase.MarkLessonCompleteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class QuizUiState(
     val questions: List<Question> = emptyList(),
@@ -31,11 +30,14 @@ data class QuizUiState(
     val passed: Boolean get() = scorePercent >= 0.7f
 }
 
-class QuizViewModel(
-    private val lessonId: String,
+@HiltViewModel
+class QuizViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getLessonById: GetLessonByIdUseCase,
     private val markLessonComplete: MarkLessonCompleteUseCase
 ) : ViewModel() {
+
+    private val lessonId: String = checkNotNull(savedStateHandle["lessonId"])
 
     private val _uiState = MutableStateFlow(QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
@@ -98,16 +100,5 @@ class QuizViewModel(
         }
     }
 
-    companion object {
-        fun factory(lessonId: String, app: LearnApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                QuizViewModel(
-                    lessonId = lessonId,
-                    getLessonById = app.container.getLessonById,
-                    markLessonComplete = app.container.markLessonComplete
-                )
-            }
-        }
-    }
 }
 

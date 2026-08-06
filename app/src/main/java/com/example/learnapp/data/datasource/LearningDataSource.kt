@@ -17,7 +17,8 @@ object LearningDataSource {
         buildCleanArchitectureTopic(),
         buildMvvmTopic(),
         buildDependencyInjectionTopic(),
-        buildRoomDatabaseTopic()
+        buildRoomDatabaseTopic(),
+        buildTestingTopic(),
     )
 
     // ─────────────────────────────────────────────
@@ -149,6 +150,37 @@ fun ProfileCardPreview() {
                         ),
                         correctIndex = 1,
                         explanation = "Accepting a Modifier parameter lets callers customize layout behavior without breaking encapsulation."
+                    ),
+                    Question(
+                        id = "q_c1_4", lessonId = "compose_1",
+                        text = "Which annotation is required for a function to emit UI in Compose?",
+                        options = listOf("@UI", "@Layout", "@Composable", "@View"),
+                        correctIndex = 2,
+                        explanation = "The @Composable annotation tells the Kotlin compiler that the function is intended to convert data into UI."
+                    ),
+                    Question(
+                        id = "q_c1_5", lessonId = "compose_1",
+                        text = "What happens to the previous UI state when a Composable is called again with new data?",
+                        options = listOf(
+                            "It is manually removed from the screen",
+                            "The entire screen is cleared and redrawn",
+                            "Compose compares the new state with the old and updates only the differences",
+                            "The old state is saved in the database"
+                        ),
+                        correctIndex = 2,
+                        explanation = "This is the core of Compose's efficiency: it calculates the 'delta' and only updates what's necessary."
+                    ),
+                    Question(
+                        id = "q_c1_6", lessonId = "compose_1",
+                        text = "Why should Composables be side-effect free?",
+                        options = listOf(
+                            "Because they can be executed in any order",
+                            "Because they run on the main thread",
+                            "Because they are anonymous functions",
+                            "Because they return Unit"
+                        ),
+                        correctIndex = 0,
+                        explanation = "Compose might execute Composables in parallel or in a different order than they appear. Side effects would lead to unpredictable behavior."
                     )
                 )
             ),
@@ -287,6 +319,37 @@ fun DashboardLayout(items: List<String>) {
                         ),
                         correctIndex = 1,
                         explanation = "LazyColumn only composes and lays out visible items, making it ideal for long or infinite lists."
+                    ),
+                    Question(
+                        id = "q_c2_4", lessonId = "compose_2",
+                        text = "How do you align a child at the center-end of a Box?",
+                        options = listOf(
+                            "horizontalAlignment = Alignment.End",
+                            "modifier = Modifier.align(Alignment.CenterEnd)",
+                            "contentAlignment = Alignment.End",
+                            "textAlign = TextAlign.Right"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Inside a Box, you use the 'align' modifier on children to position them relative to the Box's boundaries."
+                    ),
+                    Question(
+                        id = "q_c2_5", lessonId = "compose_2",
+                        text = "Which parameter in a Column controls the vertical spacing between children?",
+                        options = listOf(
+                            "verticalAlignment",
+                            "horizontalAlignment",
+                            "verticalArrangement",
+                            "padding"
+                        ),
+                        correctIndex = 2,
+                        explanation = "verticalArrangement (e.g., Arrangement.spacedBy(8.dp)) is used to define how children are distributed vertically."
+                    ),
+                    Question(
+                        id = "q_c2_6", lessonId = "compose_2",
+                        text = "What is the equivalent of a RecyclerView in Jetpack Compose?",
+                        options = listOf("ScrollView", "LazyColumn", "ListView", "Column"),
+                        correctIndex = 1,
+                        explanation = "LazyColumn provides the same 'recycling' efficiency as RecyclerView by only composing visible items."
                     )
                 )
             ),
@@ -429,6 +492,42 @@ fun SearchScreen() {
                         ),
                         correctIndex = 1,
                         explanation = "The hoisting pattern uses a value (for display) + event callback (for changes) — the caller owns the mutable state."
+                    ),
+                    Question(
+                        id = "q_c3_4", lessonId = "compose_3",
+                        text = "Why should we prefer stateless Composables?",
+                        options = listOf(
+                            "They are faster to compile",
+                            "They are easier to test, preview, and reuse",
+                            "They don't use any memory",
+                            "They are required for navigation"
+                        ),
+                        correctIndex = 1,
+                        explanation = "By hoisting state, you can pass any value (even mock data) into a Composable, making it highly flexible."
+                    ),
+                    Question(
+                        id = "q_c3_5", lessonId = "compose_3",
+                        text = "What happens if you use `remember` but not `mutableStateOf`?",
+                        options = listOf(
+                            "The value will not survive recomposition",
+                            "The value will survive recomposition, but changes to it won't trigger a new recomposition",
+                            "The app will crash",
+                            "Nothing happens"
+                        ),
+                        correctIndex = 1,
+                        explanation = "remember keeps the object instance, but it's the mutableStateOf wrapper that tells Compose to 'observe' and recompose when the value changes."
+                    ),
+                    Question(
+                        id = "q_c3_6", lessonId = "compose_3",
+                        text = "What is 'Unidirectional Data Flow' in the context of Compose state?",
+                        options = listOf(
+                            "Data moves in a circle",
+                            "State flows down, events flow up",
+                            "Events flow down, state flows up",
+                            "Data only flows from the database to the UI"
+                        ),
+                        correctIndex = 1,
+                        explanation = "UDF means the parent provides the state (down) and the child triggers events (up) to ask for changes."
                     )
                 )
             ),
@@ -570,6 +669,37 @@ fun FeatureCard(
                         ),
                         correctIndex = 2,
                         explanation = "weight() distributes the remaining space in a Row/Column among weighted children proportionally to their weight values."
+                    ),
+                    Question(
+                        id = "q_c4_3", lessonId = "compose_4",
+                        text = "How do you make a Composable clickable using modifiers?",
+                        options = listOf(
+                            "Modifier.onClick { }",
+                            "Modifier.clickable { }",
+                            "Modifier.tappable()",
+                            "Modifier.setOnClickListener { }"
+                        ),
+                        correctIndex = 1,
+                        explanation = "The .clickable { } modifier handles touch input, ripple effects, and accessibility in a single call."
+                    ),
+                    Question(
+                        id = "q_c4_4", lessonId = "compose_4",
+                        text = "If you apply `.padding(16.dp).background(Color.Red)`, where is the red color applied?",
+                        options = listOf(
+                            "Inside the padding area",
+                            "Outside the padding area (the content area only)",
+                            "To the whole screen",
+                            "It depends on the child"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Padding is applied first, then background. The background will only cover the area inside the padding."
+                    ),
+                    Question(
+                        id = "q_c4_5", lessonId = "compose_4",
+                        text = "Which modifier is used to constrain a child to a specific width and height?",
+                        options = listOf(".fill()", ".wrapContent()", ".size()", ".layout()"),
+                        correctIndex = 2,
+                        explanation = ".size(width, height) fixes the dimensions of a Composable."
                     )
                 )
             ),
@@ -725,6 +855,42 @@ fun TimerScreen(durationSeconds: Int) {
                         ),
                         correctIndex = 1,
                         explanation = "onDispose runs when the Composable leaves the composition, letting you unregister listeners or cancel subscriptions."
+                    ),
+                    Question(
+                        id = "q_c5_3", lessonId = "compose_5",
+                        text = "Which API should you use to launch a coroutine from a button click handler?",
+                        options = listOf(
+                            "LaunchedEffect",
+                            "rememberCoroutineScope",
+                            "SideEffect",
+                            "CoroutineScope(Dispatchers.Main)"
+                        ),
+                        correctIndex = 1,
+                        explanation = "rememberCoroutineScope provides a scope tied to the composition's lifecycle, safe for one-off events like clicks."
+                    ),
+                    Question(
+                        id = "q_c5_4", lessonId = "compose_5",
+                        text = "When should you use `derivedStateOf`?",
+                        options = listOf(
+                            "For any calculation in Compose",
+                            "To transform one state into another, especially when the input changes more often than the result",
+                            "To save data to Room",
+                            "Inside a ViewModel only"
+                        ),
+                        correctIndex = 1,
+                        explanation = "derivedStateOf is perfect for cases like scroll progress, where the offset changes constantly but you only care if it's past a threshold."
+                    ),
+                    Question(
+                        id = "q_c5_5", lessonId = "compose_5",
+                        text = "What is the difference between `LaunchedEffect(Unit)` and `LaunchedEffect(true)`?",
+                        options = listOf(
+                            "They are identical — both run once and never restart",
+                            "True restarts every recomposition",
+                            "Unit is faster",
+                            "True is for boolean state only"
+                        ),
+                        correctIndex = 0,
+                        explanation = "Both use a constant key, so the effect will only run once when the Composable enters the composition and will not restart."
                     )
                 )
             )
@@ -882,6 +1048,37 @@ fun AnimatedTopicCard(
                         ),
                         correctIndex = 1,
                         explanation = "AnimatedContent provides crossfade-like transitions when its targetState changes, animating old content out and new content in."
+                    ),
+                    Question(
+                        id = "q_ac1_3", lessonId = "adv_compose_1",
+                        text = "How do you create a looping/infinite animation in Compose?",
+                        options = listOf(
+                            "Use rememberInfiniteTransition",
+                            "Use a while(true) loop in a Coroutine",
+                            "Set duration to -1",
+                            "Animations cannot loop"
+                        ),
+                        correctIndex = 0,
+                        explanation = "rememberInfiniteTransition allows you to create child animations (like animateFloat) that repeat forever."
+                    ),
+                    Question(
+                        id = "q_ac1_4", lessonId = "adv_compose_1",
+                        text = "Which spec would you use for a spring-based animation?",
+                        options = listOf("tween()", "spring()", "keyframes()", "snap()"),
+                        correctIndex = 1,
+                        explanation = "spring() creates a physics-based animation that feels more natural and bouncy than a time-based tween."
+                    ),
+                    Question(
+                        id = "q_ac1_5", lessonId = "adv_compose_1",
+                        text = "What is the purpose of `animateColorAsState`?",
+                        options = listOf(
+                            "To change the color of the text",
+                            "To smoothly transition between two color values",
+                            "To generate random colors",
+                            "To set the theme color"
+                        ),
+                        correctIndex = 1,
+                        explanation = "It's a high-level API that produces a smoothly changing Color value as the input color changes."
                     )
                 )
             ),
@@ -1030,6 +1227,42 @@ fun AppNavHost(navController: NavHostController) {
                         ),
                         correctIndex = 2,
                         explanation = "Composables should receive navigation actions as lambdas (e.g., onBack: () -> Unit) rather than NavController itself, for better testability and reusability."
+                    ),
+                    Question(
+                        id = "q_ac2_3", lessonId = "adv_compose_2",
+                        text = "What does `popUpTo` do in a navigation call?",
+                        options = listOf(
+                            "Shows a popup dialog",
+                            "Removes destinations from the back stack until the specified route is reached",
+                            "Navigates to the top of the app",
+                            "Closes the app"
+                        ),
+                        correctIndex = 1,
+                        explanation = "popUpTo is used to clear the back stack up to a certain point, preventing users from backing into screens like Login after succeeding."
+                    ),
+                    Question(
+                        id = "q_ac2_4", lessonId = "adv_compose_2",
+                        text = "How do you handle a dynamic argument like `{userId}` in a NavHost route?",
+                        options = listOf(
+                            "Use a query parameter",
+                            "Define it in the route string and register it in the `arguments` list",
+                            "Pass it via a SharedFlow",
+                            "It is handled automatically"
+                        ),
+                        correctIndex = 1,
+                        explanation = "You define the placeholder in the route string and provide a list of `navArgument` to specify the type and behavior."
+                    ),
+                    Question(
+                        id = "q_ac2_5", lessonId = "adv_compose_2",
+                        text = "What is the role of the `NavHost`?",
+                        options = listOf(
+                            "It handles network requests",
+                            "It acts as a container that displays the current destination of the NavController",
+                            "It stores the user's login state",
+                            "It provides the theme to the app"
+                        ),
+                        correctIndex = 1,
+                        explanation = "NavHost links the NavController with a navigation graph that specifies the composable destinations."
                     )
                 )
             ),
@@ -1182,6 +1415,42 @@ fun TopicListScreen(
                         ),
                         correctIndex = 1,
                         explanation = "Compose considers types stable if they're primitives, lambdas, or annotated with @Stable/@Immutable — the compiler can then skip recomposing when they haven't changed."
+                    ),
+                    Question(
+                        id = "q_ac3_3", lessonId = "adv_compose_3",
+                        text = "Why is a `List` considered unstable by the Compose compiler?",
+                        options = listOf(
+                            "Because it can be very large",
+                            "Because the compiler cannot guarantee that the underlying implementation is immutable",
+                            "Because it doesn't implement equals()",
+                            "Lists are actually stable"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Standard Kotlin Interfaces like List can be implemented by mutable classes (like ArrayList), so Compose always recomposes them to be safe."
+                    ),
+                    Question(
+                        id = "q_ac3_4", lessonId = "adv_compose_3",
+                        text = "What is the benefit of the `@Immutable` annotation?",
+                        options = listOf(
+                            "It makes the class fields final",
+                            "It promises the compiler that all fields are immutable, allowing it to skip unnecessary recompositions",
+                            "It prevents the class from being inherited",
+                            "It's required for Room entities"
+                        ),
+                        correctIndex = 1,
+                        explanation = "@Immutable is a promise to the compiler that the object state will never change after construction."
+                    ),
+                    Question(
+                        id = "q_ac3_5", lessonId = "adv_compose_3",
+                        text = "How does `remember(key) { }` help with performance?",
+                        options = listOf(
+                            "It compresses data",
+                            "It caches the result and only re-calculates it if the key changes",
+                            "It moves the work to a background thread",
+                            "It prevents memory leaks"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Use remember(key) to avoid doing expensive work (like sorting a list) on every recomposition if the inputs haven't changed."
                     )
                 )
             )
@@ -1347,6 +1616,42 @@ sealed interface UserUiState {
                         ),
                         correctIndex = 2,
                         explanation = "A key advantage: suspending a coroutine does NOT block the thread. The thread is free to run other work while the coroutine is suspended."
+                    ),
+                    Question(
+                        id = "q_co1_4", lessonId = "coroutines_1",
+                        text = "Can you call a suspend function from a regular function?",
+                        options = listOf(
+                            "Yes, always",
+                            "No, it must be called from another suspend function or a coroutine builder",
+                            "Only if the function is in an Activity",
+                            "Only if using withContext"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Suspension requires a coroutine context. Regular functions don't have one."
+                    ),
+                    Question(
+                        id = "q_co1_5", lessonId = "coroutines_1",
+                        text = "What is the role of `runBlocking`?",
+                        options = listOf(
+                            "To run production code faster",
+                            "To bridge regular code and coroutines by blocking the current thread until completion (mainly for tests)",
+                            "To run code on the UI thread",
+                            "To prevent the app from closing"
+                        ),
+                        correctIndex = 1,
+                        explanation = "runBlocking blocks the calling thread, which is why it should only be used in unit tests or main functions, never in UI code."
+                    ),
+                    Question(
+                        id = "q_co1_6", lessonId = "coroutines_1",
+                        text = "What does 'lightweight threads' mean for coroutines?",
+                        options = listOf(
+                            "They don't use memory",
+                            "They are limited to 10 per app",
+                            "You can launch thousands of them without significant performance overhead",
+                            "They only work on lightweight devices"
+                        ),
+                        correctIndex = 2,
+                        explanation = "Unlike OS threads which are expensive, coroutines are managed by the Kotlin runtime and are very efficient."
                     )
                 )
             ),
@@ -1474,6 +1779,37 @@ class ImageViewModel(private val repo: ImageRepository) : ViewModel() {
                         ),
                         correctIndex = 2,
                         explanation = "withContext is a suspending function that executes the block on the given dispatcher and returns its result, then resumes on the original dispatcher."
+                    ),
+                    Question(
+                        id = "q_co2_3", lessonId = "coroutines_2",
+                        text = "Which dispatcher is best for complex JSON parsing or sorting large lists?",
+                        options = listOf("Main", "IO", "Default", "Unconfined"),
+                        correctIndex = 2,
+                        explanation = "Dispatchers.Default is optimized for CPU-intensive work and is backed by a thread pool equal to the number of CPU cores."
+                    ),
+                    Question(
+                        id = "q_co2_4", lessonId = "coroutines_2",
+                        text = "What happens if you run a long loop on `Dispatchers.Main`?",
+                        options = listOf(
+                            "It runs faster",
+                            "It blocks the UI thread, causing the app to freeze (ANR)",
+                            "It uses the GPU",
+                            "It automatically moves to background"
+                        ),
+                        correctIndex = 1,
+                        explanation = "The Main thread handles drawing and user input. Blocking it for more than a few milliseconds causes jank or an 'Application Not Responding' crash."
+                    ),
+                    Question(
+                        id = "q_co2_5", lessonId = "coroutines_2",
+                        text = "How do you combine multiple CoroutineContext elements (like a Dispatcher and a Name)?",
+                        options = listOf(
+                            "Using the `and` keyword",
+                            "Using the `+` operator",
+                            "By passing them as a List",
+                            "You can only have one element"
+                        ),
+                        correctIndex = 1,
+                        explanation = "The + operator is overloaded to combine CoroutineContext elements into a single context."
                     )
                 )
             ),
@@ -1612,6 +1948,42 @@ class DataViewModel(
                         ),
                         correctIndex = 2,
                         explanation = "supervisorScope makes children independent — a failure in one child doesn't cancel the others, unlike coroutineScope."
+                    ),
+                    Question(
+                        id = "q_co3_3", lessonId = "coroutines_3",
+                        text = "Why is `GlobalScope` discouraged in Android development?",
+                        options = listOf(
+                            "It uses too much battery",
+                            "It creates coroutines that aren't tied to any lifecycle, leading to memory leaks and wasted work",
+                            "It only works in Java",
+                            "It doesn't support suspend functions"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Coroutines in GlobalScope live as long as the application, making them hard to manage and prone to leaking resources."
+                    ),
+                    Question(
+                        id = "q_co3_4", lessonId = "coroutines_3",
+                        text = "What is a 'Job' in Kotlin coroutines?",
+                        options = listOf(
+                            "A background thread",
+                            "A handle to a coroutine that can be used to monitor its status or cancel it",
+                            "A piece of work for the CPU",
+                            "A Room database operation"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Every coroutine builder (launch, async) returns or involves a Job, which represents the coroutine's lifecycle."
+                    ),
+                    Question(
+                        id = "q_co3_5", lessonId = "coroutines_3",
+                        text = "In `coroutineScope { }`, what happens if one child coroutine fails with an exception?",
+                        options = listOf(
+                            "Only that child stops",
+                            "The scope and all sibling coroutines are cancelled",
+                            "The app crashes immediately",
+                            "Nothing happens to other coroutines"
+                        ),
+                        correctIndex = 1,
+                        explanation = "coroutineScope follows the 'all-or-nothing' rule: if any child fails, it cancels the scope and all other children."
                     )
                 )
             ),
@@ -1753,6 +2125,42 @@ class ProductViewModel(private val repo: ProductRepository) : ViewModel() {
                         ),
                         correctIndex = 1,
                         explanation = "CoroutineExceptionHandler only works for uncaught exceptions in launch. For async, exceptions are stored in the Deferred and thrown when you call .await()."
+                    ),
+                    Question(
+                        id = "q_co4_3", lessonId = "coroutines_4",
+                        text = "Where is the best place to use `try-catch` for an API call?",
+                        options = listOf(
+                            "Inside the Composable",
+                            "Directly around the suspending call in the ViewModel or Repository",
+                            "In the Application class",
+                            "API calls shouldn't use try-catch"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Wrapping the risky call directly allows you to handle specific errors (like NetworkException) and update the UI state accordingly."
+                    ),
+                    Question(
+                        id = "q_co4_4", lessonId = "coroutines_4",
+                        text = "What is the purpose of `runCatching { }`?",
+                        options = listOf(
+                            "It runs a coroutine safely",
+                            "It's a Kotlin idiomatic way to execute a block and return a Result object containing either success or failure",
+                            "It catches memory leaks",
+                            "It restarts the app on failure"
+                        ),
+                        correctIndex = 1,
+                        explanation = "runCatching simplifies error handling by wrapping the result in a Result type that provides .onSuccess and .onFailure helpers."
+                    ),
+                    Question(
+                        id = "q_co4_5", lessonId = "coroutines_4",
+                        text = "When an exception occurs in a coroutine, how does it propagate?",
+                        options = listOf(
+                            "It disappears",
+                            "It propagates up to the parent coroutine/scope",
+                            "It stays in the child coroutine",
+                            "It prints to Logcat only"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Exceptions propagate up the hierarchy, which is why a failure in one child can cancel the entire parent scope unless a Supervisor is used."
                     )
                 )
             )
@@ -1916,6 +2324,32 @@ class WeatherViewModel(private val repo: WeatherRepository) : ViewModel() {
                         ),
                         correctIndex = 1,
                         explanation = "flowOn changes the coroutine context for everything upstream of it — the emission side. Collection still happens on the original context."
+                    ),
+                    Question(
+                        id = "q_fl1_3", lessonId = "flows_1",
+                        text = "Which function is used to start receiving values from a cold Flow?",
+                        options = listOf("start()", "collect()", "observe()", "execute()"),
+                        correctIndex = 1,
+                        explanation = "collect() is a terminal operator that triggers the flow's execution and starts receiving emitted values."
+                    ),
+                    Question(
+                        id = "q_fl1_4", lessonId = "flows_1",
+                        text = "How do you emit a value from inside a `flow { }` builder?",
+                        options = listOf("send(value)", "push(value)", "emit(value)", "return(value)"),
+                        correctIndex = 2,
+                        explanation = "The emit() function is used inside the flow builder to send a new value to the collector."
+                    ),
+                    Question(
+                        id = "q_fl1_5", lessonId = "flows_1",
+                        text = "Can a cold Flow have multiple collectors?",
+                        options = listOf(
+                            "No, only one collector is allowed",
+                            "Yes, and each collector will trigger a fresh execution of the flow code",
+                            "Yes, and they all share the same values from the same execution",
+                            "Only if it is converted to a StateFlow"
+                        ),
+                        correctIndex = 1,
+                        explanation = "One of the defining features of a cold Flow is that it is not shared; each call to collect() starts a new independent execution."
                     )
                 )
             ),
@@ -2061,6 +2495,37 @@ class SearchViewModel(private val searchRepo: SearchRepository) : ViewModel() {
                         ),
                         correctIndex = 1,
                         explanation = "combine re-emits with the latest value of all flows whenever any one of them emits. zip pairs values: it waits for both flows to emit before pairing them."
+                    ),
+                    Question(
+                        id = "q_fl2_3", lessonId = "flows_2",
+                        text = "What does the `debounce(300L)` operator do?",
+                        options = listOf(
+                            "Repeats the last value every 300ms",
+                            "Ignores values that come faster than 300ms apart, only emitting the last one after the period passes",
+                            "Limits the flow to 300 total values",
+                            "Changes the dispatcher"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Debouncing is essential for search fields to avoid making a network request for every single keystroke."
+                    ),
+                    Question(
+                        id = "q_fl2_4", lessonId = "flows_2",
+                        text = "Which operator would you use to handle exceptions inside a Flow pipeline?",
+                        options = listOf("try-catch", "handleError", "catch { }", "onErrorResumeNext"),
+                        correctIndex = 2,
+                        explanation = "The catch operator encapsulates the logic for handling upstream exceptions without leaking them to the collector."
+                    ),
+                    Question(
+                        id = "q_fl2_5", lessonId = "flows_2",
+                        text = "What is the result of applying `distinctUntilChanged()`?",
+                        options = listOf(
+                            "All duplicate values in the flow are removed",
+                            "Subsequent identical values are skipped (only unique transitions are emitted)",
+                            "The flow is sorted",
+                            "The flow emits in reverse order"
+                        ),
+                        correctIndex = 1,
+                        explanation = "It prevents the flow from emitting the same value multiple times in a row, which is useful for avoiding redundant UI updates."
                     )
                 )
             ),
@@ -2206,6 +2671,37 @@ class OrderViewModel(private val repo: OrderRepository) : ViewModel() {
                         ),
                         correctIndex = 1,
                         explanation = "WhileSubscribed(5000) keeps the upstream flow active for 5 seconds after the last subscriber disappears — avoiding restart during screen rotation."
+                    ),
+                    Question(
+                        id = "q_fl3_3", lessonId = "flows_3",
+                        text = "What is the key difference between a hot flow and a cold flow?",
+                        options = listOf(
+                            "Hot flows are faster",
+                            "Cold flows only run when collected; hot flows can produce values even without collectors",
+                            "Cold flows only work on background threads",
+                            "Hot flows use more memory"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Hot flows (like StateFlow) are active regardless of collectors. Cold flows (like flow { }) are lazy and start fresh for every collector."
+                    ),
+                    Question(
+                        id = "q_fl3_4", lessonId = "flows_3",
+                        text = "Does a StateFlow ever have a null value?",
+                        options = listOf(
+                            "Yes, always",
+                            "Only if the initial value is null",
+                            "No, it must always have a value (non-nullable by default unless T is nullable)",
+                            "StateFlow doesn't support values"
+                        ),
+                        correctIndex = 1,
+                        explanation = "StateFlow must be initialized with a value. It always provides its 'current' state to any observer."
+                    ),
+                    Question(
+                        id = "q_fl3_5", lessonId = "flows_3",
+                        text = "Which function converts a cold Flow into a StateFlow?",
+                        options = listOf("asStateFlow()", "stateIn()", "toStateFlow()", "observe()"),
+                        correctIndex = 1,
+                        explanation = "stateIn() is a operator that starts a collection of the upstream flow in a given scope and exposes the results as a StateFlow."
                     )
                 )
             )
@@ -2376,6 +2872,37 @@ class ArticleViewModel(
                         ),
                         correctIndex = 2,
                         explanation = "The Repository interface lives in the Domain layer. This inverts the dependency: the Data layer implements the Domain interface, not the other way around."
+                    ),
+                    Question(
+                        id = "q_cl1_3", lessonId = "clean_1",
+                        text = "What is the 'Inward Dependency' rule?",
+                        options = listOf(
+                            "Inner layers must know about outer layers",
+                            "Outer layers depend on inner layers; inner layers are independent",
+                            "All layers depend on each other",
+                            "Data layer depends on Presentation"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Dependencies always point toward the core (Domain layer). This ensures the business logic remains stable and unaffected by external changes."
+                    ),
+                    Question(
+                        id = "q_cl1_4", lessonId = "clean_1",
+                        text = "What belongs in the Data layer?",
+                        options = listOf(
+                            "Use Cases",
+                            "ViewModels",
+                            "Repository implementations and Data Sources (Retrofit, Room)",
+                            "Business logic"
+                        ),
+                        correctIndex = 2,
+                        explanation = "The Data layer handles the actual retrieval and storage of data using specific frameworks and libraries."
+                    ),
+                    Question(
+                        id = "q_cl1_5", lessonId = "clean_1",
+                        text = "Which layer is responsible for translating data into something the user can see?",
+                        options = listOf("Domain", "Data", "Presentation", "Network"),
+                        correctIndex = 2,
+                        explanation = "The Presentation layer (UI and ViewModels) is the only layer concerned with the user interface and user interaction."
                     )
                 )
             ),
@@ -2527,6 +3054,37 @@ class RegisterUserUseCase(
                         ),
                         correctIndex = 2,
                         explanation = "Validation is business logic and belongs in the Domain layer as Use Cases. This makes it reusable and independently testable."
+                    ),
+                    Question(
+                        id = "q_cl2_3", lessonId = "clean_2",
+                        text = "A Use Case should ideally handle how many business operations?",
+                        options = listOf("All operations for a feature", "Exactly one", "Up to five", "As many as needed"),
+                        correctIndex = 1,
+                        explanation = "Use Cases follow the Single Responsibility Principle: one class, one business action. This keeps them focused and easy to maintain."
+                    ),
+                    Question(
+                        id = "q_cl2_4", lessonId = "clean_2",
+                        text = "Can a Use Case depend on another Use Case?",
+                        options = listOf(
+                            "No, never",
+                            "Yes, this is common for complex logic",
+                            "Only in the Data layer",
+                            "Only if the other Use Case is in the same file"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Use Cases can be composed. For example, a RegisterUserUseCase might call a ValidateEmailUseCase."
+                    ),
+                    Question(
+                        id = "q_cl2_5", lessonId = "clean_2",
+                        text = "What is the advantage of using Use Cases instead of calling Repositories directly from ViewModels?",
+                        options = listOf(
+                            "It makes the app faster",
+                            "It increases code reuse and makes the ViewModel smaller and focused only on UI logic",
+                            "It is required by Hilt",
+                            "It allows using Room"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Use Cases act as a bridge, preventing ViewModels from becoming bloated with business logic that could be shared across the app."
                     )
                 )
             )
@@ -2695,6 +3253,37 @@ class ProfileViewModel(
                         ),
                         correctIndex = 2,
                         explanation = "ViewModels outlive Activities during configuration changes. Holding a reference to a destroyed Activity/View causes memory leaks."
+                    ),
+                    Question(
+                        id = "q_mv1_3", lessonId = "mvvm_1",
+                        text = "Which CoroutineScope should you use inside a ViewModel?",
+                        options = listOf("GlobalScope", "lifecycleScope", "viewModelScope", "MainScope"),
+                        correctIndex = 2,
+                        explanation = "viewModelScope is specifically designed for ViewModels; it is automatically cancelled when the ViewModel is destroyed."
+                    ),
+                    Question(
+                        id = "q_mv1_4", lessonId = "mvvm_1",
+                        text = "What is the purpose of `onCleared()` in a ViewModel?",
+                        options = listOf(
+                            "To save data before rotation",
+                            "To clean up resources (like closing sockets or cancelling timers) when the ViewModel is permanently destroyed",
+                            "To refresh the UI",
+                            "To clear the cache"
+                        ),
+                        correctIndex = 1,
+                        explanation = "onCleared is called when the Activity is finishing or the back stack entry is removed, indicating the ViewModel is no longer needed."
+                    ),
+                    Question(
+                        id = "q_mv1_5", lessonId = "mvvm_1",
+                        text = "How do you provide dependencies to a ViewModel constructor if you're not using a DI framework like Hilt?",
+                        options = listOf(
+                            "You can't have constructor parameters",
+                            "Use a ViewModelProvider.Factory",
+                            "Use a global variable",
+                            "Pass them in the init block"
+                        ),
+                        correctIndex = 1,
+                        explanation = "A Factory is required to tell the ViewModelProvider how to instantiate your ViewModel with its dependencies."
                     )
                 )
             ),
@@ -2870,6 +3459,37 @@ class TopicListViewModel(
                         ),
                         correctIndex = 1,
                         explanation = "Navigation is a one-time action (effect/side effect). If it were in StateFlow, rotating the screen would re-navigate. Use SharedFlow with replay=0 for navigation events."
+                    ),
+                    Question(
+                        id = "q_mv2_3", lessonId = "mvvm_2",
+                        text = "What is a 'Single Source of Truth' in MVVM?",
+                        options = listOf(
+                            "The database",
+                            "The ViewModel state that the UI observes",
+                            "The user input",
+                            "The network"
+                        ),
+                        correctIndex = 1,
+                        explanation = "The UI should only ever reflect the state provided by the ViewModel. This ensures consistency and makes debugging easier."
+                    ),
+                    Question(
+                        id = "q_mv2_4", lessonId = "mvvm_2",
+                        text = "Which tool is best for modeling complex UI state with multiple mutually exclusive states (e.g., Loading, Success, Error)?",
+                        options = listOf("List", "Int", "Sealed Class/Interface", "String"),
+                        correctIndex = 2,
+                        explanation = "Sealed hierarchies allow you to represent restricted types, ensuring the UI only handles valid states and enabling exhaustive 'when' expressions."
+                    ),
+                    Question(
+                        id = "q_mv2_5", lessonId = "mvvm_2",
+                        text = "What is the benefit of One-Way Data Flow?",
+                        options = listOf(
+                            "Less code",
+                            "Easier debugging and testing because state changes are predictable and centralized in the ViewModel",
+                            "Faster performance",
+                            "Better looking UI"
+                        ),
+                        correctIndex = 1,
+                        explanation = "UDF provides a clear path for data: events go up, state comes down. This prevents 'state sync' bugs where the UI and ViewModel disagree."
                     )
                 )
             )
@@ -3020,6 +3640,54 @@ val testVm = ArticleViewModel(getArticles, FakeAnalyticsService())
                         ),
                         correctIndex = 1,
                         explanation = "Depending on interfaces lets you inject different implementations: a real one in production, a fake one in tests — without modifying the class."
+                    ),
+                    Question(
+                        id = "q_di1_2", lessonId = "di_1",
+                        text = "What is 'Constructor Injection'?",
+                        options = listOf(
+                            "Creating dependencies in the constructor",
+                            "Passing dependencies as parameters to the constructor",
+                            "Inheriting from a base class",
+                            "Using a static factory"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Constructor injection is the most common form of DI, where a class explicitly states its requirements in its constructor."
+                    ),
+                    Question(
+                        id = "q_di1_3", lessonId = "di_1",
+                        text = "In the AppContainer pattern, where does the container usually live?",
+                        options = listOf(
+                            "In the Activity",
+                            "In the ViewModel",
+                            "In the Application class",
+                            "In a global static variable"
+                        ),
+                        correctIndex = 2,
+                        explanation = "The Application class lives as long as the process, making it the perfect place to hold the app's global dependencies."
+                    ),
+                    Question(
+                        id = "q_di1_4", lessonId = "di_1",
+                        text = "Why does DI improve testability?",
+                        options = listOf(
+                            "It makes code run faster",
+                            "It allows you to inject mocks or fakes instead of real network/database implementations",
+                            "It's required for JUnit",
+                            "It reduces the number of lines of code"
+                        ),
+                        correctIndex = 1,
+                        explanation = "By injecting dependencies, you can provide controlled 'fakes' in unit tests, ensuring you only test the class in isolation."
+                    ),
+                    Question(
+                        id = "q_di1_5", lessonId = "di_1",
+                        text = "What does it mean for a class to be 'decoupled'?",
+                        options = listOf(
+                            "It has no dependencies",
+                            "It doesn't know the internal implementation details of its dependencies",
+                            "It is in a separate module",
+                            "It is a private class"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Decoupling ensures that changes in one class (e.g., changing from Retrofit to Ktor) don't force changes in other classes."
                     )
                 )
             ),
@@ -3219,6 +3887,37 @@ fun UserScreen(vm: UserViewModel = hiltViewModel()) {
                         ),
                         correctIndex = 1,
                         explanation = "@Binds is efficient (generates no code) and used to bind an interface to its implementation. @Provides is used when you need to call a constructor or builder (like Retrofit.Builder())."
+                    ),
+                    Question(
+                        id = "q_di2_3", lessonId = "di_2",
+                        text = "What is the purpose of `@HiltAndroidApp`?",
+                        options = listOf(
+                            "It makes the app faster",
+                            "It triggers Hilt code generation and provides the base dependency container",
+                            "It marks an Activity for injection",
+                            "It is used for database migrations"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Every app using Hilt must have an Application class annotated with @HiltAndroidApp to kick off the dependency graph."
+                    ),
+                    Question(
+                        id = "q_di2_4", lessonId = "di_2",
+                        text = "Which annotation is used to inject dependencies into an Activity or Fragment?",
+                        options = listOf("@Inject", "@HiltViewModel", "@AndroidEntryPoint", "@Module"),
+                        correctIndex = 2,
+                        explanation = "@AndroidEntryPoint enables Hilt injection in Android components like Activities, Fragments, Views, and Services."
+                    ),
+                    Question(
+                        id = "q_di2_5", lessonId = "di_2",
+                        text = "What does the `@Singleton` scope do?",
+                        options = listOf(
+                            "Ensures only one instance of the dependency exists for the entire app lifetime",
+                            "Creates a new instance for every Activity",
+                            "Only works with the Application class",
+                            "Prevents the class from being garbage collected"
+                        ),
+                        correctIndex = 0,
+                        explanation = "A @Singleton dependency is created once in the SingletonComponent and shared everywhere it's injected."
                     )
                 )
             )
@@ -3387,6 +4086,37 @@ abstract class NotesDatabase : RoomDatabase() {
                         ),
                         correctIndex = 2,
                         explanation = "REPLACE removes the conflicting row and inserts the new one — effectively an upsert (insert or update)."
+                    ),
+                    Question(
+                        id = "q_rm1_3", lessonId = "room_1",
+                        text = "Which annotation marks a class as a database table in Room?",
+                        options = listOf("@Table", "@Database", "@Entity", "@Model"),
+                        correctIndex = 2,
+                        explanation = "The @Entity annotation tells Room to create a table corresponding to that data class."
+                    ),
+                    Question(
+                        id = "q_rm1_4", lessonId = "room_1",
+                        text = "What is a 'DAO' in Room?",
+                        options = listOf(
+                            "Database Access Object — an interface for defining database queries",
+                            "Data Android Object",
+                            "A background thread",
+                            "A type of migration"
+                        ),
+                        correctIndex = 0,
+                        explanation = "DAOs (Data Access Objects) are the main component of Room that defines the methods for accessing the database."
+                    ),
+                    Question(
+                        id = "q_rm1_5", lessonId = "room_1",
+                        text = "Why should DAO methods for writing data (Insert, Update, Delete) be `suspend` functions?",
+                        options = listOf(
+                            "They shouldn't be",
+                            "To ensure they run on the Main thread",
+                            "To prevent blocking the Main thread, since database I/O is slow",
+                            "To make them serializable"
+                        ),
+                        correctIndex = 2,
+                        explanation = "Database operations are slow and could cause ANRs if run on the Main thread. Room makes it easy to run them on background threads using coroutines."
                     )
                 )
             ),
@@ -3548,6 +4278,300 @@ class NotesViewModel(private val repo: NoteRepository) : ViewModel() {
                         ),
                         correctIndex = 1,
                         explanation = "Room can only store primitives. TypeConverters let you serialize complex types (like List<String> or Date) to/from a type Room understands (String, Long)."
+                    ),
+                    Question(
+                        id = "q_rm2_3", lessonId = "room_2",
+                        text = "What must you do when adding a new column to an existing @Entity?",
+                        options = listOf(
+                            "Nothing, Room handles it",
+                            "Increment the database version and provide a Migration object",
+                            "Reinstall the app",
+                            "Change the DAO interface"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Changing the schema requires a version bump and an explicit migration path to avoid data loss."
+                    ),
+                    Question(
+                        id = "q_rm2_4", lessonId = "room_2",
+                        text = "Where is the best place to map Room entities to Domain models?",
+                        options = listOf("In the DAO", "In the Repository implementation", "In the ViewModel", "In the UI"),
+                        correctIndex = 1,
+                        explanation = "The Repository layer acts as a boundary, ensuring that the rest of the app (Domain and UI) only deals with pure domain models, not database-specific entities."
+                    ),
+                    Question(
+                        id = "q_rm2_5", lessonId = "room_2",
+                        text = "Can you use multiple TypeConverters in one database?",
+                        options = listOf("No, only one is allowed", "Yes, by listing them in the @TypeConverters annotation", "Only in separate tables", "Only for Strings"),
+                        correctIndex = 1,
+                        explanation = "You can provide a class containing as many @TypeConverter methods as you need to handle all your custom types."
+                    )
+                )
+            )
+        )
+    )
+
+    // ─────────────────────────────────────────────
+    // TOPIC 9 — Testing & Quality
+    // ─────────────────────────────────────────────
+    private fun buildTestingTopic() = Topic(
+        id = "testing_quality",
+        title = "Testing & Quality",
+        description = "Ensure your app works as expected. Master Unit tests, UI tests, and mocking.",
+        emoji = "🧪",
+        colorHex = "#00838F",
+        secondaryColorHex = "#4DD0E1",
+        difficulty = Difficulty.ADVANCED,
+        estimatedMinutes = 60,
+        lessons = listOf(
+            Lesson(
+                id = "test_1",
+                topicId = "testing_quality",
+                order = 1,
+                title = "Unit Testing & Mocking",
+                summary = "Learn how to test your business logic in isolation using JUnit and MockK.",
+                content = """
+## Why Unit Test?
+
+Unit tests verify small, isolated pieces of code (functions, classes) in seconds. They catch regressions early and serve as documentation.
+
+## MockK — The Modern Mocking Library
+
+In Clean Architecture, we mock the **Repository** to test the **Use Case**, or mock **Use Cases** to test the **ViewModel**.
+
+```kotlin
+val repo = mockk<UserRepository>()
+val useCase = GetUserUseCase(repo)
+
+// Stubbing
+coEvery { repo.getUser("1") } returns User("1", "Alice")
+
+// Assertion
+val result = useCase("1")
+assertEquals("Alice", result.name)
+```
+
+## Testing Coroutines
+
+Use `runTest` to skip delays and `StandardTestDispatcher` to control time:
+
+```kotlin
+@Test
+fun `load data updates state`() = runTest {
+    viewModel.load()
+    advanceUntilIdle() // process all coroutines
+    assertEquals(State.Success, viewModel.uiState.value)
+}
+```
+
+## The Main Dispatcher Rule
+
+In tests, `Dispatchers.Main` is not available. You must swap it using a JUnit Rule or @Before block:
+
+```kotlin
+@Before
+fun setup() {
+    Dispatchers.setMain(StandardTestDispatcher())
+}
+```
+                """.trimIndent(),
+                codeExample = """
+// Typical ViewModel Test
+@OptIn(ExperimentalCoroutinesApi::class)
+class HomeViewModelTest {
+
+    private val testDispatcher = StandardTestDispatcher()
+    private val getAllTopics = mockk<GetAllTopicsUseCase>()
+    private val observeProgress = mockk<ObserveProgressUseCase>()
+    private lateinit var viewModel: HomeViewModel
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+        
+        // Default stubs
+        every { getAllTopics() } returns emptyList()
+        every { observeProgress() } returns flowOf(UserProgress())
+        
+        viewModel = HomeViewModel(getAllTopics, observeProgress)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `search query updates correctly`() = runTest {
+        viewModel.onSearchQueryChange("Compose")
+        assertEquals("Compose", viewModel.uiState.value.searchQuery)
+    }
+}
+                """.trimIndent(),
+                keyPoints = listOf(
+                    "Mock dependencies to test classes in isolation",
+                    "Use MockK for modern, idiomatic Kotlin mocking",
+                    "runTest allows testing suspend functions without real-world delays",
+                    "Swap Dispatchers.Main with a TestDispatcher in unit tests",
+                    "Unit tests should be fast, stable, and have zero Android dependencies"
+                ),
+                questions = listOf(
+                    Question(
+                        id = "q_ts1_1", lessonId = "test_1",
+                        text = "What is the purpose of mocking a dependency?",
+                        options = listOf(
+                            "To make the code run faster",
+                            "To replace a real dependency (like a network API) with a controlled object for testing",
+                            "To save memory",
+                            "To bypass Hilt"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Mocking allows you to isolate the unit being tested by controlling the behavior of its dependencies."
+                    ),
+                    Question(
+                        id = "q_ts1_2", lessonId = "test_1",
+                        text = "Which Coroutine builder should you use in unit tests?",
+                        options = listOf("launch", "async", "runTest", "runBlocking"),
+                        correctIndex = 2,
+                        explanation = "runTest is specifically designed for testing; it automatically skips delay() and provides control over virtual time."
+                    ),
+                    Question(
+                        id = "q_ts1_3", lessonId = "test_1",
+                        text = "Why do we need to call `Dispatchers.setMain` in unit tests?",
+                        options = listOf(
+                            "Because the Android Main thread doesn't exist in local JUnit tests",
+                            "To make tests multi-threaded",
+                            "To use the GPU",
+                            "To enable Room database"
+                        ),
+                        correctIndex = 0,
+                        explanation = "Local tests run on the JVM, not an Android device. There is no Looper.getMainLooper(), so we must provide a test dispatcher."
+                    )
+                )
+            ),
+            Lesson(
+                id = "test_2",
+                topicId = "testing_quality",
+                order = 2,
+                title = "Compose UI Testing",
+                summary = "Verify your UI behavior with the Compose Testing library.",
+                content = """
+## Semantics — The Bridge to UI
+
+Compose uses **Semantics** (metadata about UI elements) to find and interact with nodes.
+
+## Finding Nodes
+
+- `onNodeWithText("Login")`
+- `onNodeWithContentDescription("Back")`
+- `onNodeWithTag("search_field")`
+
+## Performing Actions
+
+```kotlin
+composeTestRule.onNodeWithText("Search").performTextInput("Compose")
+composeTestRule.onNodeWithText("Submit").performClick()
+```
+
+## Assertions
+
+```kotlin
+composeTestRule.onNodeWithText("Success").assertIsDisplayed()
+composeTestRule.onNodeWithTag("error_icon").assertDoesNotExist()
+```
+
+## The Compose Test Rule
+
+```kotlin
+@get:Rule
+val composeTestRule = createAndroidComposeRule<MainActivity>()
+// or for isolated component tests:
+val composeTestRule = createComposeRule()
+```
+                """.trimIndent(),
+                codeExample = """
+// UI Test for Navigation
+class NavigationTest {
+
+    @get:Rule
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @Test
+    fun testNavigateToProgress() {
+        // Find icon by content description and click
+        composeTestRule
+            .onNodeWithContentDescription("Progress")
+            .performClick()
+
+        // Verify destination screen title exists
+        composeTestRule
+            .onNodeWithText("My Progress")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun testSearchFiltering() {
+        val query = "Coroutines"
+        
+        // Input text into search field
+        composeTestRule
+            .onNodeWithText("Search topics...")
+            .performTextInput(query)
+
+        // Verify filtered result is shown
+        composeTestRule
+            .onNodeWithText("Kotlin Coroutines")
+            .assertExists()
+            
+        // Verify unrelated result is hidden
+        composeTestRule
+            .onNodeWithText("Room Database")
+            .assertDoesNotExist()
+    }
+}
+                """.trimIndent(),
+                keyPoints = listOf(
+                    "UI tests use Semantics to find and interact with Composables",
+                    "Use contentDescription for icons to make them accessible and testable",
+                    "createComposeRule() is for testing isolated components; createAndroidComposeRule<T>() for Activities",
+                    "UI tests run on an emulator or real device (androidTest folder)",
+                    "Verify both 'Happy Path' and 'Error States' in your UI tests"
+                ),
+                questions = listOf(
+                    Question(
+                        id = "q_ts2_1", lessonId = "test_2",
+                        text = "Which function is used to find a Composable based on its visible text?",
+                        options = listOf(
+                            "findViewByText()",
+                            "onNodeWithText()",
+                            "onNodeWithTag()",
+                            "getComposable()"
+                        ),
+                        correctIndex = 1,
+                        explanation = "onNodeWithText is the most common way to find UI elements in Compose tests."
+                    ),
+                    Question(
+                        id = "q_ts2_2", lessonId = "test_2",
+                        text = "Where should UI tests (instrumented tests) be located in your project?",
+                        options = listOf(
+                            "src/test/java",
+                            "src/main/java",
+                            "src/androidTest/java",
+                            "src/debug/java"
+                        ),
+                        correctIndex = 2,
+                        explanation = "androidTest is the standard folder for tests that require a real Android device or emulator to run."
+                    ),
+                    Question(
+                        id = "q_ts2_3", lessonId = "test_2",
+                        text = "Why is `contentDescription` important for testing?",
+                        options = listOf(
+                            "It improves performance",
+                            "It allows finding elements that have no text (like icons) and improves accessibility",
+                            "It sets the font size",
+                            "It is required by the compiler"
+                        ),
+                        correctIndex = 1,
+                        explanation = "Icons have no text, so contentDescription provides the necessary semantic information for both Screen Readers and UI tests."
                     )
                 )
             )

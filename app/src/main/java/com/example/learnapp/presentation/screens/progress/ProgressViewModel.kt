@@ -1,22 +1,20 @@
 package com.example.learnapp.presentation.screens.progress
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 import com.example.learnapp.domain.usecase.ClearProgressUseCase
 import com.example.learnapp.domain.usecase.GetAllTopicsUseCase
 import com.example.learnapp.domain.usecase.ObserveProgressUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class ProgressUiState(
     val topics: List<Topic> = emptyList(),
@@ -31,7 +29,8 @@ data class ProgressUiState(
     }
 }
 
-class ProgressViewModel(
+@HiltViewModel
+class ProgressViewModel @Inject constructor(
     private val getAllTopics: GetAllTopicsUseCase,
     private val observeProgress: ObserveProgressUseCase,
     private val clearProgress: ClearProgressUseCase
@@ -52,16 +51,5 @@ class ProgressViewModel(
         viewModelScope.launch { clearProgress() }
     }
 
-    companion object {
-        fun factory(app: LearnApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                ProgressViewModel(
-                    getAllTopics = app.container.getAllTopics,
-                    observeProgress = app.container.observeProgress,
-                    clearProgress = app.container.clearProgress
-                )
-            }
-        }
-    }
 }
 

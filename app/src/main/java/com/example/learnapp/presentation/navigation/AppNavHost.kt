@@ -1,83 +1,79 @@
 package com.example.learnapp.presentation.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.learnapp.LearnApp
+import androidx.navigation.toRoute
 import com.example.learnapp.presentation.screens.home.HomeScreen
 import com.example.learnapp.presentation.screens.lesson.LessonScreen
 import com.example.learnapp.presentation.screens.progress.ProgressScreen
 import com.example.learnapp.presentation.screens.quiz.QuizScreen
 import com.example.learnapp.presentation.screens.topic.TopicDetailScreen
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    app: LearnApp,
+    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.HOME,
-        modifier = modifier
-    ) {
-        composable(Screen.HOME) {
-            HomeScreen(
-                app = app,
-                onTopicClick = { topicId -> navController.navigate(Screen.topicRoute(topicId)) },
-                onProgressClick = { navController.navigate(Screen.PROGRESS) }
-            )
-        }
+    SharedTransitionLayout {
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home,
+            modifier = modifier
+        ) {
+            composable<Screen.Home> {
+                HomeScreen(
+                    onTopicClick = { topicId -> navController.navigate(Screen.TopicDetail(topicId)) },
+                    onProgressClick = { navController.navigate(Screen.Progress) },
+                    windowSizeClass = windowSizeClass,
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedVisibilityScope = this@composable
+                )
+            }
 
-        composable(Screen.PROGRESS) {
-            ProgressScreen(
-                app = app,
-                onBack = navController::navigateUp,
-                onTopicClick = { topicId -> navController.navigate(Screen.topicRoute(topicId)) }
-            )
-        }
+            composable<Screen.Progress> {
+                ProgressScreen(
+                    onBack = navController::navigateUp,
+                    onTopicClick = { topicId -> navController.navigate(Screen.TopicDetail(topicId)) }
+                )
+            }
 
-        composable(
-            route = Screen.TOPIC,
-            arguments = listOf(navArgument("topicId") { type = NavType.StringType })
-        ) { backStack ->
-            val topicId = backStack.arguments!!.getString("topicId")!!
-            TopicDetailScreen(
-                topicId = topicId,
-                app = app,
-                onLessonClick = { lessonId -> navController.navigate(Screen.lessonRoute(lessonId)) },
-                onBack = navController::navigateUp
-            )
-        }
+            composable<Screen.TopicDetail> { backStack ->
+                val route = backStack.toRoute<Screen.TopicDetail>()
+                TopicDetailScreen(
+                    topicId = route.topicId,
+                    onLessonClick = { lessonId -> navController.navigate(Screen.Lesson(lessonId)) },
+                    onBack = navController::navigateUp,
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedVisibilityScope = this@composable
+                )
+            }
 
-        composable(
-            route = Screen.LESSON,
-            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
-        ) { backStack ->
-            val lessonId = backStack.arguments!!.getString("lessonId")!!
-            LessonScreen(
-                lessonId = lessonId,
-                app = app,
-                onStartQuiz = { navController.navigate(Screen.quizRoute(lessonId)) },
-                onBack = navController::navigateUp
-            )
-        }
+            composable<Screen.Lesson> { backStack ->
+                val route = backStack.toRoute<Screen.Lesson>()
+                LessonScreen(
+                    lessonId = route.lessonId,
+                    onStartQuiz = { navController.navigate(Screen.Quiz(route.lessonId)) },
+                    onBack = navController::navigateUp
+                )
+            }
 
-        composable(
-            route = Screen.QUIZ,
-            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
-        ) { backStack ->
-            val lessonId = backStack.arguments!!.getString("lessonId")!!
-            QuizScreen(
-                lessonId = lessonId,
-                app = app,
-                onFinish = { navController.navigateUp() },
-                onBack = navController::navigateUp
-            )
+            composable<Screen.Quiz> { backStack ->
+                val route = backStack.toRoute<Screen.Quiz>()
+                QuizScreen(
+                    lessonId = route.lessonId,
+                    onFinish = { navController.navigateUp() },
+                    onBack = navController::navigateUp
+                )
+            }
         }
     }
 }

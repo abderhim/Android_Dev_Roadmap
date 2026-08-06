@@ -52,20 +52,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressScreen(
-    app: LearnApp,
     onBack: () -> Unit,
-    onTopicClick: (String) -> Unit
+    onTopicClick: (String) -> Unit,
+    viewModel: ProgressViewModel = hiltViewModel()
 ) {
-    val viewModel: ProgressViewModel = viewModel(factory = ProgressViewModel.factory(app))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showClearDialog by remember { mutableStateOf(false) }
 

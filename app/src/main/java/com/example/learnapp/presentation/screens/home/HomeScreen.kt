@@ -1,6 +1,9 @@
 package com.example.learnapp.presentation.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -22,6 +25,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,6 +48,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -51,38 +60,40 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Difficulty
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
-    app: LearnApp,
     onTopicClick: (String) -> Unit,
-    onProgressClick: () -> Unit
+    onProgressClick: () -> Unit,
+    windowSizeClass: WindowSizeClass,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.factory(app))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Column {
-                    Text(
-                        text = "Android Dev",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Roadmap",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
+                        Text(
+                            text = "Android Dev",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Roadmap",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
                     }
                 },
                 actions = {
@@ -96,17 +107,22 @@ fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
+        val columns = if (isExpanded) 2 else 1
+        
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
                 top = paddingValues.calculateTopPadding() + 8.dp,
                 bottom = 24.dp
             ),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize()
         ) {
             // Progress banner
-            item {
+            item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }) {
                 ProgressBanner(
                     completed = uiState.completedLessons,
                     total = uiState.totalLessons,
@@ -116,7 +132,7 @@ fun HomeScreen(
             }
 
             // Search bar
-            item {
+            item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }) {
                 OutlinedTextField(
                     value = uiState.searchQuery,
                     onValueChange = viewModel::onSearchQueryChange,
@@ -140,7 +156,7 @@ fun HomeScreen(
             }
 
             // Section header
-            item {
+            item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }) {
                 Text(
                     text = if (uiState.searchQuery.isBlank()) "All Topics" else "Results for \"${uiState.searchQuery}\"",
                     style = MaterialTheme.typography.titleMedium,
@@ -150,7 +166,7 @@ fun HomeScreen(
             }
 
             if (uiState.filteredTopics.isEmpty()) {
-                item {
+                item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }) {
                     EmptySearchState(uiState.searchQuery)
                 }
             }
@@ -160,14 +176,15 @@ fun HomeScreen(
                 items = uiState.filteredTopics,
                 key = { _, topic -> topic.id }
             ) { index, topic ->
-                AnimatedVisibility(
-                    visible = true,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
-                ) {
+                with(sharedTransitionScope) {
                     TopicCard(
                         topic = topic,
                         progress = uiState.progress,
-                        onClick = { onTopicClick(topic.id) }
+                        onClick = { onTopicClick(topic.id) },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(key = "topic_card_${topic.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
                     )
                 }
             }

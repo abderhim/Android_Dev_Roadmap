@@ -30,6 +30,7 @@ A free, comprehensive Android learning app that teaches you everything you need 
 | 🔄 MVVM & UI State | 2 lessons | Intermediate |
 | 🔧 Dependency Injection | 2 lessons | Advanced |
 | 🗄️ Room Database | 2 lessons | Intermediate |
+| 🧪 Testing & Quality | 2 lessons | Advanced |
 
 ### Topics covered in detail:
 - **Jetpack Compose** — Composable functions, recomposition, layouts (Column/Row/Box/LazyColumn), state hoisting, Modifiers, side effects (LaunchedEffect, DisposableEffect, rememberCoroutineScope)
@@ -40,6 +41,7 @@ A free, comprehensive Android learning app that teaches you everything you need 
 - **MVVM & UI State** — ViewModel lifecycle, one-way data flow (UDF), UI State vs UI Effects, MutableStateFlow.update
 - **Dependency Injection** — Manual DI (AppContainer pattern), Hilt setup, @HiltViewModel, @Module/@Provides/@Binds, scopes
 - **Room Database** — @Entity, @Dao, @Database, reactive queries with Flow, migrations, TypeConverters
+- **Testing & Quality** — Unit Testing with MockK, Testing Coroutines (runTest), Compose UI Testing, Semantics, Navigation Testing
 
 ---
 
@@ -54,18 +56,20 @@ app/
 │   ├── repository/              # LearningRepository interface
 │   └── usecase/                 # 7 focused use cases
 ├── data/
+│   ├── local/                   # Room Database, DAOs, Entities
 │   ├── datasource/              # All lesson content (LearningDataSource)
-│   └── repository/              # LearningRepositoryImpl + DataStore
+│   └── repository/              # LearningRepositoryImpl (Hilt injected)
 ├── presentation/
-│   ├── navigation/              # NavHost + Screen routes
+│   ├── navigation/              # NavHost + Screen routes (Type-Safe)
 │   └── screens/
 │       ├── home/                # HomeScreen + HomeViewModel
 │       ├── topic/               # TopicDetailScreen + TopicViewModel
 │       ├── lesson/              # LessonScreen + LessonViewModel
 │       ├── quiz/                # QuizScreen + QuizViewModel
 │       └── progress/            # ProgressScreen + ProgressViewModel
-├── LearnApp.kt                  # Application class + AppContainer (manual DI)
-└── MainActivity.kt
+├── di/                          # Hilt Modules (AppModule)
+├── LearnApp.kt                  # @HiltAndroidApp
+└── MainActivity.kt              # @AndroidEntryPoint + WindowSizeClass
 ```
 
 **Patterns used:**
@@ -73,8 +77,12 @@ app/
 - ✅ MVVM with StateFlow + one-way data flow
 - ✅ Repository pattern with interface in Domain layer
 - ✅ Use Cases with `operator fun invoke`
-- ✅ Manual DI via AppContainer (ServiceLocator)
+- ✅ Dependency Injection via **Hilt**
 - ✅ UI State + UI Effects separation (StateFlow + SharedFlow)
+- ✅ Type-Safe Navigation (Kotlin Serialization)
+- ✅ Offline-First with **Room Database**
+- ✅ Adaptive Layouts (supporting Tablets & Foldables)
+- ✅ Shared Element Transitions
 
 ---
 
@@ -84,13 +92,14 @@ app/
 |---|---|
 | **Jetpack Compose** | Entire UI |
 | **Material 3** | Design system |
-| **Navigation Compose** | Screen navigation |
+| **Navigation Compose** | Type-safe screen navigation |
 | **Kotlin Coroutines** | Async operations |
 | **Kotlin Flows** | Reactive state management |
 | **StateFlow / SharedFlow** | ViewModel → UI communication |
-| **DataStore Preferences** | Persistent progress storage |
+| **Room Database** | Local persistence |
+| **Dagger Hilt** | Dependency injection |
 | **ViewModel** | Lifecycle-aware state holders |
-| **ViewModelFactory** | Manual dependency injection |
+| **KSP** | Kotlin Symbol Processing (for Room/Hilt) |
 
 ---
 
@@ -103,7 +112,7 @@ app/
 
 ### Build & Run
 ```bash
-git clone https://github.com/YOUR_USERNAME/android-dev-roadmap.git
+git clone https://github.com/abderhim/android-dev-roadmap.git
 cd android-dev-roadmap
 ```
 Open in Android Studio → **Sync Gradle** → **Run**
@@ -139,7 +148,7 @@ MIT License — free to use, modify, and distribute.
 
 **Abderrahim Ibn Said**  
 Android Developer  
-[GitHub](https://github.com/YOUR_USERNAME) · [LinkedIn](https://linkedin.com/in/YOUR_PROFILE)
+[GitHub](https://github.com/abderhim) · [LinkedIn](https://www.linkedin.com/in/abderrahim-ibn-said/)
 
 ---
 

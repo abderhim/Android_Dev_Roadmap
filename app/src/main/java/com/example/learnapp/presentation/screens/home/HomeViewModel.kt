@@ -1,21 +1,18 @@
 package com.example.learnapp.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 import com.example.learnapp.domain.usecase.GetAllTopicsUseCase
 import com.example.learnapp.domain.usecase.ObserveProgressUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 data class HomeUiState(
     val topics: List<Topic> = emptyList(),
@@ -33,7 +30,8 @@ data class HomeUiState(
         get() = if (totalLessons == 0) 0f else completedLessons.toFloat() / totalLessons
 }
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val getAllTopics: GetAllTopicsUseCase,
     private val observeProgress: ObserveProgressUseCase
 ) : ViewModel() {
@@ -67,15 +65,5 @@ class HomeViewModel(
         _searchQuery.value = query
     }
 
-    companion object {
-        fun factory(app: LearnApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                HomeViewModel(
-                    getAllTopics = app.container.getAllTopics,
-                    observeProgress = app.container.observeProgress
-                )
-            }
-        }
-    }
 }
 

@@ -1,5 +1,8 @@
 package com.example.learnapp.presentation.screens.topic
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,23 +46,23 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.learnapp.LearnApp
 import com.example.learnapp.domain.model.Lesson
 import com.example.learnapp.domain.model.Topic
 import com.example.learnapp.domain.model.UserProgress
 import com.example.learnapp.presentation.screens.home.DifficultyChip
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun TopicDetailScreen(
     topicId: String,
-    app: LearnApp,
     onLessonClick: (String) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: TopicViewModel = hiltViewModel()
 ) {
-    val viewModel: TopicViewModel = viewModel(factory = TopicViewModel.factory(topicId, app))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val topic = uiState.topic
 
@@ -88,7 +91,18 @@ fun TopicDetailScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item { TopicHeader(topic = topic, progress = uiState.progress) }
+                item {
+                    with(sharedTransitionScope) {
+                        TopicHeader(
+                            topic = topic,
+                            progress = uiState.progress,
+                            modifier = Modifier.sharedElement(
+                                rememberSharedContentState(key = "topic_card_${topic.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        )
+                    }
+                }
                 item {
                     Text(
                         "Lessons",
@@ -112,14 +126,18 @@ fun TopicDetailScreen(
 }
 
 @Composable
-private fun TopicHeader(topic: Topic, progress: UserProgress) {
+private fun TopicHeader(
+    topic: Topic,
+    progress: UserProgress,
+    modifier: Modifier = Modifier
+) {
     val completedCount = topic.lessons.count { progress.isLessonCompleted(it.id) }
     val topicProgress = progress.topicProgress(topic)
     val primaryColor = Color(android.graphics.Color.parseColor(topic.colorHex))
     val secondaryColor = Color(android.graphics.Color.parseColor(topic.secondaryColorHex))
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
