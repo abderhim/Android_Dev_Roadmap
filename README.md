@@ -70,7 +70,7 @@ app/
 │       ├── quiz/                # QuizScreen + QuizViewModel
 │       └── progress/            # ProgressScreen + ProgressViewModel
 ├── di/                          # Hilt Modules (AppModule)
-├── LearnApp.kt                  # @HiltAndroidApp
+├── AndroidDevRoadmapApp.kt      # @HiltAndroidApp
 └── MainActivity.kt              # @AndroidEntryPoint + WindowSizeClass
 ```
 
