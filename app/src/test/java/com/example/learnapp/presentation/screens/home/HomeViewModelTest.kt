@@ -7,8 +7,12 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -40,16 +44,27 @@ class HomeViewModelTest {
     @Test
     fun `initial state is correct`() =
         runTest {
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+            advanceUntilIdle()
+
             val state = viewModel.uiState.value
             assertEquals(emptyList<com.example.learnapp.domain.model.Topic>(), state.topics)
             assertEquals(false, state.isLoading)
             assertEquals("", state.searchQuery)
+
+            collectJob.cancel()
         }
 
     @Test
     fun `search query change updates state`() =
         runTest {
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
             viewModel.onSearchQueryChange("Compose")
+            advanceUntilIdle()
+
             assertEquals("Compose", viewModel.uiState.value.searchQuery)
+
+            collectJob.cancel()
         }
 }

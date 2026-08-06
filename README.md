@@ -1,5 +1,7 @@
 # 📱 Android Dev Roadmap
 
+![Android CI](https://github.com/abderhim/Android_Dev_Roadmap/actions/workflows/android_ci.yml/badge.svg)
+
 > **Master modern Android development — one lesson at a time.**
 
 A free, comprehensive Android learning app that teaches you everything you need to become a great Android developer — through structured lessons, real code examples, interactive quizzes, and progress tracking.
