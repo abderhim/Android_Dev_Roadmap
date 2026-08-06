@@ -62,7 +62,7 @@ fun QuizScreen(
     lessonId: String,
     onFinish: () -> Unit,
     onBack: () -> Unit,
-    viewModel: QuizViewModel = hiltViewModel()
+    viewModel: QuizViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -75,25 +75,26 @@ fun QuizScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             )
-        }
+        },
     ) { padding ->
         if (uiState.isFinished) {
             QuizResultScreen(
                 uiState = uiState,
                 onRestart = viewModel::restartQuiz,
                 onFinish = onFinish,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
             )
         } else if (uiState.currentQuestion != null) {
             QuizQuestionContent(
                 uiState = uiState,
                 onSelectAnswer = viewModel::selectAnswer,
                 onNext = viewModel::nextQuestion,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
             )
         }
     }
@@ -104,33 +105,34 @@ private fun QuizQuestionContent(
     uiState: QuizUiState,
     onSelectAnswer: (Int) -> Unit,
     onNext: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = uiState.progress,
-        label = "quiz_progress"
+        label = "quiz_progress",
     )
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         // Progress bar
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 "${uiState.currentIndex + 1} of ${uiState.questions.size}",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 "${(uiState.scorePercent * 100).toInt()}% correct so far",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
 
@@ -138,11 +140,12 @@ private fun QuizQuestionContent(
 
         LinearProgressIndicator(
             progress = { animatedProgress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp)
-                .clip(RoundedCornerShape(3.dp)),
-            color = MaterialTheme.colorScheme.primary
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp)),
+            color = MaterialTheme.colorScheme.primary,
         )
 
         Spacer(Modifier.height(24.dp))
@@ -151,9 +154,9 @@ private fun QuizQuestionContent(
             targetState = uiState.currentIndex,
             transitionSpec = {
                 slideInHorizontally { it } + fadeIn() togetherWith
-                        slideOutHorizontally { -it } + fadeOut()
+                    slideOutHorizontally { -it } + fadeOut()
             },
-            label = "question_transition"
+            label = "question_transition",
         ) { targetIndex ->
             val question = uiState.questions.getOrNull(targetIndex)
             if (question != null) {
@@ -163,7 +166,7 @@ private fun QuizQuestionContent(
                     isRevealed = uiState.isAnswerRevealed,
                     onSelectAnswer = onSelectAnswer,
                     onNext = onNext,
-                    isLastQuestion = uiState.isLastQuestion
+                    isLastQuestion = uiState.isLastQuestion,
                 )
             }
         }
@@ -177,23 +180,24 @@ private fun QuestionCard(
     isRevealed: Boolean,
     onSelectAnswer: (Int) -> Unit,
     onNext: () -> Unit,
-    isLastQuestion: Boolean
+    isLastQuestion: Boolean,
 ) {
     Column {
         // Question text
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+                ),
         ) {
             Text(
                 text = question.text,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(20.dp),
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
 
@@ -207,7 +211,7 @@ private fun QuestionCard(
                 isSelected = selectedAnswer == index,
                 isCorrect = question.correctIndex == index,
                 isRevealed = isRevealed,
-                onClick = { onSelectAnswer(index) }
+                onClick = { onSelectAnswer(index) },
             )
             Spacer(Modifier.height(8.dp))
         }
@@ -220,37 +224,52 @@ private fun QuestionCard(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (selectedAnswer == question.correctIndex)
-                        Color(0xFF4CAF50).copy(alpha = 0.1f)
-                    else
-                        Color(0xFFF44336).copy(alpha = 0.1f)
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor =
+                            if (selectedAnswer == question.correctIndex) {
+                                Color(0xFF4CAF50).copy(alpha = 0.1f)
+                            } else {
+                                Color(0xFFF44336).copy(alpha = 0.1f)
+                            },
+                    ),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = if (selectedAnswer == question.correctIndex)
-                                Icons.Default.CheckCircle else Icons.Default.Close,
+                            imageVector =
+                                if (selectedAnswer == question.correctIndex) {
+                                    Icons.Default.CheckCircle
+                                } else {
+                                    Icons.Default.Close
+                                },
                             contentDescription = null,
-                            tint = if (selectedAnswer == question.correctIndex)
-                                Color(0xFF4CAF50) else Color(0xFFF44336),
-                            modifier = Modifier.size(20.dp)
+                            tint =
+                                if (selectedAnswer == question.correctIndex) {
+                                    Color(0xFF4CAF50)
+                                } else {
+                                    Color(0xFFF44336)
+                                },
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = if (selectedAnswer == question.correctIndex) "Correct!" else "Incorrect",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = if (selectedAnswer == question.correctIndex)
-                                Color(0xFF2E7D32) else Color(0xFFB71C1C)
+                            color =
+                                if (selectedAnswer == question.correctIndex) {
+                                    Color(0xFF2E7D32)
+                                } else {
+                                    Color(0xFFB71C1C)
+                                },
                         )
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = question.explanation,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -261,7 +280,7 @@ private fun QuestionCard(
             Button(
                 onClick = onNext,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(14.dp),
             ) {
                 Text(if (isLastQuestion) "See Results" else "Next Question")
             }
@@ -276,45 +295,49 @@ private fun AnswerOption(
     isSelected: Boolean,
     isCorrect: Boolean,
     isRevealed: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
-    val backgroundColor = when {
-        isRevealed && isCorrect -> Color(0xFF4CAF50).copy(alpha = 0.15f)
-        isRevealed && isSelected -> Color(0xFFF44336).copy(alpha = 0.15f)
-        isSelected -> MaterialTheme.colorScheme.primaryContainer
-        else -> MaterialTheme.colorScheme.surface
-    }
-    val borderColor = when {
-        isRevealed && isCorrect -> Color(0xFF4CAF50)
-        isRevealed && isSelected -> Color(0xFFF44336)
-        isSelected -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-    }
+    val backgroundColor =
+        when {
+            isRevealed && isCorrect -> Color(0xFF4CAF50).copy(alpha = 0.15f)
+            isRevealed && isSelected -> Color(0xFFF44336).copy(alpha = 0.15f)
+            isSelected -> MaterialTheme.colorScheme.primaryContainer
+            else -> MaterialTheme.colorScheme.surface
+        }
+    val borderColor =
+        when {
+            isRevealed && isCorrect -> Color(0xFF4CAF50)
+            isRevealed && isSelected -> Color(0xFFF44336)
+            isSelected -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+        }
 
     val optionLabel = ('A' + index).toString()
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(backgroundColor)
-            .border(1.5.dp, borderColor, RoundedCornerShape(14.dp))
-            .clickable(enabled = !isRevealed, onClick = onClick)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(backgroundColor)
+                .border(1.5.dp, borderColor, RoundedCornerShape(14.dp))
+                .clickable(enabled = !isRevealed, onClick = onClick)
+                .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .background(borderColor.copy(alpha = 0.15f)),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(borderColor.copy(alpha = 0.15f)),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = optionLabel,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = borderColor
+                color = borderColor,
             )
         }
         Spacer(Modifier.width(12.dp))
@@ -322,14 +345,14 @@ private fun AnswerOption(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         if (isRevealed && isCorrect) {
             Icon(
                 Icons.Default.CheckCircle,
                 contentDescription = null,
                 tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
         }
     }
@@ -340,21 +363,21 @@ private fun QuizResultScreen(
     uiState: QuizUiState,
     onRestart: () -> Unit,
     onFinish: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scorePercent = (uiState.scorePercent * 100).toInt()
 
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             modifier = Modifier.padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = if (uiState.passed) "🎉" else "📚",
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.displayLarge,
             )
 
             Spacer(Modifier.height(16.dp))
@@ -363,7 +386,7 @@ private fun QuizResultScreen(
                 text = if (uiState.passed) "Well done!" else "Keep learning!",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(8.dp))
@@ -372,7 +395,7 @@ private fun QuizResultScreen(
                 text = "${uiState.correctCount} / ${uiState.questions.size} correct ($scorePercent%)",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(24.dp))
@@ -381,27 +404,28 @@ private fun QuizResultScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        ),
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
                     ) {
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp),
+                        )
                         Spacer(Modifier.width(8.dp))
                         Text(
                             "Lesson marked as complete!",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
@@ -411,7 +435,7 @@ private fun QuizResultScreen(
             Button(
                 onClick = onFinish,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(14.dp),
             ) {
                 Text("Back to Lesson")
             }
@@ -421,7 +445,7 @@ private fun QuizResultScreen(
             FilledTonalButton(
                 onClick = onRestart,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(14.dp),
             ) {
                 Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
@@ -430,4 +454,3 @@ private fun QuizResultScreen(
         }
     }
 }
-

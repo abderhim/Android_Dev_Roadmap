@@ -19,37 +19,38 @@ import javax.inject.Inject
 data class ProgressUiState(
     val topics: List<Topic> = emptyList(),
     val progress: UserProgress = UserProgress(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 ) {
     val totalLessons: Int get() = topics.sumOf { it.lessonCount }
     val completedLessons: Int get() = progress.totalCompleted
     val overallProgress: Float get() = if (totalLessons == 0) 0f else completedLessons.toFloat() / totalLessons
-    val completedTopics: Int get() = topics.count { topic ->
-        topic.lessons.all { progress.isLessonCompleted(it.id) }
-    }
+    val completedTopics: Int get() =
+        topics.count { topic ->
+            topic.lessons.all { progress.isLessonCompleted(it.id) }
+        }
 }
 
 @HiltViewModel
-class ProgressViewModel @Inject constructor(
-    private val getAllTopics: GetAllTopicsUseCase,
-    private val observeProgress: ObserveProgressUseCase,
-    private val clearProgress: ClearProgressUseCase
-) : ViewModel() {
+class ProgressViewModel
+    @Inject
+    constructor(
+        private val getAllTopics: GetAllTopicsUseCase,
+        private val observeProgress: ObserveProgressUseCase,
+        private val clearProgress: ClearProgressUseCase,
+    ) : ViewModel() {
+        val uiState: StateFlow<ProgressUiState> =
+            combine(
+                flow { emit(getAllTopics()) },
+                observeProgress(),
+            ) { topics, progress ->
+                ProgressUiState(topics = topics, progress = progress, isLoading = false)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = ProgressUiState(),
+            )
 
-    val uiState: StateFlow<ProgressUiState> = combine(
-        flow { emit(getAllTopics()) },
-        observeProgress()
-    ) { topics, progress ->
-        ProgressUiState(topics = topics, progress = progress, isLoading = false)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = ProgressUiState()
-    )
-
-    fun clearAllProgress() {
-        viewModelScope.launch { clearProgress() }
+        fun clearAllProgress() {
+            viewModelScope.launch { clearProgress() }
+        }
     }
-
-}
-

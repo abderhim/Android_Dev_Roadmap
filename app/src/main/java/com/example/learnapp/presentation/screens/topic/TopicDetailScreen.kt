@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,7 +59,7 @@ fun TopicDetailScreen(
     onBack: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: TopicViewModel = hiltViewModel()
+    viewModel: TopicViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val topic = uiState.topic
@@ -75,31 +73,34 @@ fun TopicDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             )
-        }
+        },
     ) { padding ->
         if (topic != null) {
             LazyColumn(
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = padding.calculateTopPadding(),
-                    bottom = 24.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding =
+                    PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = padding.calculateTopPadding(),
+                        bottom = 24.dp,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 item {
                     with(sharedTransitionScope) {
                         TopicHeader(
                             topic = topic,
                             progress = uiState.progress,
-                            modifier = Modifier.sharedElement(
-                                rememberSharedContentState(key = "topic_card_${topic.id}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
+                            modifier =
+                                Modifier.sharedElement(
+                                    rememberSharedContentState(key = "topic_card_${topic.id}"),
+                                    animatedVisibilityScope = animatedVisibilityScope,
+                                ),
                         )
                     }
                 }
@@ -108,7 +109,7 @@ fun TopicDetailScreen(
                         "Lessons",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                 }
                 itemsIndexed(topic.lessons, key = { _, l -> l.id }) { index, lesson ->
@@ -117,7 +118,7 @@ fun TopicDetailScreen(
                         index = index + 1,
                         isCompleted = uiState.progress.isLessonCompleted(lesson.id),
                         topicColor = Color(android.graphics.Color.parseColor(topic.colorHex)),
-                        onClick = { onLessonClick(lesson.id) }
+                        onClick = { onLessonClick(lesson.id) },
                     )
                 }
             }
@@ -129,7 +130,7 @@ fun TopicDetailScreen(
 private fun TopicHeader(
     topic: Topic,
     progress: UserProgress,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val completedCount = topic.lessons.count { progress.isLessonCompleted(it.id) }
     val topicProgress = progress.topicProgress(topic)
@@ -139,13 +140,14 @@ private fun TopicHeader(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Brush.horizontalGradient(listOf(primaryColor, secondaryColor)))
-                .padding(20.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(Brush.horizontalGradient(listOf(primaryColor, secondaryColor)))
+                    .padding(20.dp),
         ) {
             Column {
                 Text(topic.emoji, style = MaterialTheme.typography.displayMedium)
@@ -154,33 +156,34 @@ private fun TopicHeader(
                     topic.title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     topic.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.85f)
+                    color = Color.White.copy(alpha = 0.85f),
                 )
                 Spacer(Modifier.height(12.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         DifficultyChip(topic.difficulty)
                         Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.2f))
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                            modifier =
+                                Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Color.White.copy(alpha = 0.2f))
+                                    .padding(horizontal = 8.dp, vertical = 2.dp),
                         ) {
                             Text(
                                 "${topic.estimatedMinutes} min",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color.White
+                                color = Color.White,
                             )
                         }
                     }
@@ -188,7 +191,7 @@ private fun TopicHeader(
                         "$completedCount/${topic.lessonCount} done",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.9f),
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
 
@@ -196,12 +199,13 @@ private fun TopicHeader(
                     Spacer(Modifier.height(8.dp))
                     LinearProgressIndicator(
                         progress = { topicProgress },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(6.dp)
-                            .clip(RoundedCornerShape(3.dp)),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(3.dp)),
                         color = Color.White,
-                        trackColor = Color.White.copy(alpha = 0.3f)
+                        trackColor = Color.White.copy(alpha = 0.3f),
                     )
                 }
             }
@@ -216,48 +220,56 @@ fun LessonItem(
     isCompleted: Boolean,
     topicColor: Color,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCompleted)
-                topicColor.copy(alpha = 0.08f)
-            else
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isCompleted) {
+                        topicColor.copy(alpha = 0.08f)
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    },
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Number / check circle
             Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(
-                        if (isCompleted) topicColor.copy(alpha = 0.2f)
-                        else MaterialTheme.colorScheme.surface
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (isCompleted) {
+                                topicColor.copy(alpha = 0.2f)
+                            } else {
+                                MaterialTheme.colorScheme.surface
+                            },
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 if (isCompleted) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Completed",
                         tint = topicColor,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 } else {
                     Text(
                         text = "$index",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -269,20 +281,20 @@ fun LessonItem(
                     text = lesson.title,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = lesson.summary,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2
+                    maxLines = 2,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "${lesson.questions.size} quiz questions",
                     style = MaterialTheme.typography.labelSmall,
-                    color = topicColor.copy(alpha = 0.8f)
+                    color = topicColor.copy(alpha = 0.8f),
                 )
             }
 
@@ -292,9 +304,8 @@ fun LessonItem(
                 imageVector = Icons.Default.PlayArrow,
                 contentDescription = "Open lesson",
                 tint = if (isCompleted) topicColor else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
         }
     }
 }
-

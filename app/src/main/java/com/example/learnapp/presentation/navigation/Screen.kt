@@ -10,12 +10,17 @@ sealed interface Screen {
     data object Progress : Screen
 
     @Serializable
-    data class TopicDetail(val topicId: String) : Screen
+    data class TopicDetail(
+        val topicId: String,
+    ) : Screen
 
     @Serializable
-    data class Lesson(val lessonId: String) : Screen
+    data class Lesson(
+        val lessonId: String,
+    ) : Screen
 
     @Serializable
-    data class Quiz(val lessonId: String) : Screen
+    data class Quiz(
+        val lessonId: String,
+    ) : Screen
 }
-

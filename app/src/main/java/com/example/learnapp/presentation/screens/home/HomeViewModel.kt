@@ -18,11 +18,15 @@ data class HomeUiState(
     val topics: List<Topic> = emptyList(),
     val progress: UserProgress = UserProgress(),
     val searchQuery: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 ) {
     val filteredTopics: List<Topic>
-        get() = if (searchQuery.isBlank()) topics
-        else topics.filter { it.title.contains(searchQuery, ignoreCase = true) }
+        get() =
+            if (searchQuery.isBlank()) {
+                topics
+            } else {
+                topics.filter { it.title.contains(searchQuery, ignoreCase = true) }
+            }
 
     val totalLessons: Int get() = topics.sumOf { it.lessonCount }
     val completedLessons: Int get() = progress.totalCompleted
@@ -31,39 +35,39 @@ data class HomeUiState(
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getAllTopics: GetAllTopicsUseCase,
-    private val observeProgress: ObserveProgressUseCase
-) : ViewModel() {
+class HomeViewModel
+    @Inject
+    constructor(
+        private val getAllTopics: GetAllTopicsUseCase,
+        private val observeProgress: ObserveProgressUseCase,
+    ) : ViewModel() {
+        private val _searchQuery = MutableStateFlow("")
+        private val _isLoading = MutableStateFlow(true)
 
-    private val _searchQuery = MutableStateFlow("")
-    private val _isLoading = MutableStateFlow(true)
+        val uiState: StateFlow<HomeUiState> =
+            combine(
+                _searchQuery,
+                observeProgress(),
+                _isLoading,
+            ) { query, progress, loading ->
+                val topics = getAllTopics()
+                HomeUiState(
+                    topics = topics,
+                    progress = progress,
+                    searchQuery = query,
+                    isLoading = loading,
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = HomeUiState(),
+            )
 
-    val uiState: StateFlow<HomeUiState> = combine(
-        _searchQuery,
-        observeProgress(),
-        _isLoading
-    ) { query, progress, loading ->
-        val topics = getAllTopics()
-        HomeUiState(
-            topics = topics,
-            progress = progress,
-            searchQuery = query,
-            isLoading = loading
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = HomeUiState()
-    )
+        init {
+            _isLoading.value = false
+        }
 
-    init {
-        _isLoading.value = false
+        fun onSearchQueryChange(query: String) {
+            _searchQuery.value = query
+        }
     }
-
-    fun onSearchQueryChange(query: String) {
-        _searchQuery.value = query
-    }
-
-}
-

@@ -2,7 +2,6 @@ package com.example.learnapp.presentation.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,13 +20,13 @@ import com.example.learnapp.presentation.screens.topic.TopicDetailScreen
 fun AppNavHost(
     navController: NavHostController,
     windowSizeClass: WindowSizeClass,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SharedTransitionLayout {
         NavHost(
             navController = navController,
             startDestination = Screen.Home,
-            modifier = modifier
+            modifier = modifier,
         ) {
             composable<Screen.Home> {
                 HomeScreen(
@@ -35,14 +34,14 @@ fun AppNavHost(
                     onProgressClick = { navController.navigate(Screen.Progress) },
                     windowSizeClass = windowSizeClass,
                     sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable
+                    animatedVisibilityScope = this@composable,
                 )
             }
 
             composable<Screen.Progress> {
                 ProgressScreen(
                     onBack = navController::navigateUp,
-                    onTopicClick = { topicId -> navController.navigate(Screen.TopicDetail(topicId)) }
+                    onTopicClick = { topicId -> navController.navigate(Screen.TopicDetail(topicId)) },
                 )
             }
 
@@ -53,7 +52,7 @@ fun AppNavHost(
                     onLessonClick = { lessonId -> navController.navigate(Screen.Lesson(lessonId)) },
                     onBack = navController::navigateUp,
                     sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable
+                    animatedVisibilityScope = this@composable,
                 )
             }
 
@@ -62,7 +61,7 @@ fun AppNavHost(
                 LessonScreen(
                     lessonId = route.lessonId,
                     onStartQuiz = { navController.navigate(Screen.Quiz(route.lessonId)) },
-                    onBack = navController::navigateUp
+                    onBack = navController::navigateUp,
                 )
             }
 
@@ -71,10 +70,9 @@ fun AppNavHost(
                 QuizScreen(
                     lessonId = route.lessonId,
                     onFinish = { navController.navigateUp() },
-                    onBack = navController::navigateUp
+                    onBack = navController::navigateUp,
                 )
             }
         }
     }
 }
-

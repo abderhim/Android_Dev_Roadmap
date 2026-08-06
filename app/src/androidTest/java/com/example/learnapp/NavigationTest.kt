@@ -8,7 +8,6 @@ import org.junit.Rule
 import org.junit.Test
 
 class NavigationTest {
-
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 

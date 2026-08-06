@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -48,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,7 +59,7 @@ import com.example.learnapp.domain.model.UserProgress
 fun ProgressScreen(
     onBack: () -> Unit,
     onTopicClick: (String) -> Unit,
-    viewModel: ProgressViewModel = hiltViewModel()
+    viewModel: ProgressViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showClearDialog by remember { mutableStateOf(false) }
@@ -82,7 +79,7 @@ fun ProgressScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showClearDialog = false }) { Text("Cancel") }
-            }
+            },
         )
     }
 
@@ -100,20 +97,22 @@ fun ProgressScreen(
                         Icon(Icons.Default.DeleteSweep, contentDescription = "Reset progress")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             )
-        }
+        },
     ) { padding ->
         LazyColumn(
-            contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                top = padding.calculateTopPadding() + 8.dp,
-                bottom = 24.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            contentPadding =
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = padding.calculateTopPadding() + 8.dp,
+                    bottom = 24.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
                 OverallProgressCard(
@@ -121,7 +120,7 @@ fun ProgressScreen(
                     totalLessons = uiState.totalLessons,
                     completedTopics = uiState.completedTopics,
                     totalTopics = uiState.topics.size,
-                    overallProgress = uiState.overallProgress
+                    overallProgress = uiState.overallProgress,
                 )
             }
 
@@ -129,7 +128,7 @@ fun ProgressScreen(
                 Text(
                     "Topic Progress",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
@@ -137,7 +136,7 @@ fun ProgressScreen(
                 TopicProgressCard(
                     topic = topic,
                     progress = uiState.progress,
-                    onClick = { onTopicClick(topic.id) }
+                    onClick = { onTopicClick(topic.id) },
                 )
             }
         }
@@ -150,21 +149,22 @@ private fun OverallProgressCard(
     totalLessons: Int,
     completedTopics: Int,
     totalTopics: Int,
-    overallProgress: Float
+    overallProgress: Float,
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = overallProgress,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-        label = "overall_progress"
+        label = "overall_progress",
     )
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(4.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
+        elevation = CardDefaults.cardElevation(4.dp),
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -172,7 +172,7 @@ private fun OverallProgressCard(
                     Icons.Default.EmojiEvents,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
                 Spacer(Modifier.width(12.dp))
                 Column {
@@ -180,12 +180,12 @@ private fun OverallProgressCard(
                         "Overall Progress",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Text(
                         "${(overallProgress * 100).toInt()}% complete",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                     )
                 }
             }
@@ -194,34 +194,35 @@ private fun OverallProgressCard(
 
             LinearProgressIndicator(
                 progress = { animatedProgress },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-                    .clip(RoundedCornerShape(5.dp)),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                        .clip(RoundedCornerShape(5.dp)),
                 color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
             )
 
             Spacer(Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 StatItem(
                     value = "$completedLessons",
                     label = "Lessons\nCompleted",
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 StatItem(
                     value = "$totalLessons",
                     label = "Total\nLessons",
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
                 )
                 StatItem(
                     value = "$completedTopics",
                     label = "Topics\nFinished",
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
         }
@@ -229,19 +230,23 @@ private fun OverallProgressCard(
 }
 
 @Composable
-private fun StatItem(value: String, label: String, color: Color) {
+private fun StatItem(
+    value: String,
+    label: String,
+    color: Color,
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = value,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
         )
     }
 }
@@ -250,7 +255,7 @@ private fun StatItem(value: String, label: String, color: Color) {
 private fun TopicProgressCard(
     topic: Topic,
     progress: UserProgress,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val topicProgress = progress.topicProgress(topic)
     val completedCount = topic.lessons.count { progress.isLessonCompleted(it.id) }
@@ -258,29 +263,32 @@ private fun TopicProgressCard(
     val animatedProgress by animateFloatAsState(
         targetValue = topicProgress,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-        label = "topic_progress"
+        label = "topic_progress",
     )
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(2.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        elevation = CardDefaults.cardElevation(2.dp),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(primaryColor.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(primaryColor.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(topic.emoji, style = MaterialTheme.typography.titleLarge)
             }
@@ -291,18 +299,18 @@ private fun TopicProgressCard(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         topic.title,
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         "$completedCount/${topic.lessonCount}",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
-                        color = primaryColor
+                        color = primaryColor,
                     )
                 }
 
@@ -310,12 +318,13 @@ private fun TopicProgressCard(
 
                 LinearProgressIndicator(
                     progress = { animatedProgress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp)),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .clip(RoundedCornerShape(2.dp)),
                     color = primaryColor,
-                    trackColor = primaryColor.copy(alpha = 0.15f)
+                    trackColor = primaryColor.copy(alpha = 0.15f),
                 )
 
                 Spacer(Modifier.height(6.dp))
@@ -328,14 +337,14 @@ private fun TopicProgressCard(
                             imageVector = if (isDone) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
                             contentDescription = null,
                             tint = if (isDone) primaryColor else MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
-                            modifier = Modifier.size(12.dp)
+                            modifier = Modifier.size(12.dp),
                         )
                     }
                     if (topic.lessonCount > 10) {
                         Text(
                             "+${topic.lessonCount - 10}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -343,4 +352,3 @@ private fun TopicProgressCard(
         }
     }
 }
-

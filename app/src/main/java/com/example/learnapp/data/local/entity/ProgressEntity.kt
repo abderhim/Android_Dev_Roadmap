@@ -5,5 +5,5 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_progress")
 data class ProgressEntity(
-    @PrimaryKey val lessonId: String
+    @PrimaryKey val lessonId: String,
 )

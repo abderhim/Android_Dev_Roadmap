@@ -26,12 +26,12 @@ class MainActivity : ComponentActivity() {
             LearnAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
                     AppNavHost(
                         navController = navController,
-                        windowSizeClass = windowSizeClass
+                        windowSizeClass = windowSizeClass,
                     )
                 }
             }

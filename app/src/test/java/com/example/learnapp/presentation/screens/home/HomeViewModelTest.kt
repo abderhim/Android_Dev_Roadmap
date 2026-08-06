@@ -19,7 +19,6 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
     private val getAllTopicsUseCase = mockk<GetAllTopicsUseCase>()
     private val observeProgressUseCase = mockk<ObserveProgressUseCase>()
@@ -39,16 +38,18 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `initial state is correct`() = runTest {
-        val state = viewModel.uiState.value
-        assertEquals(emptyList<com.example.learnapp.domain.model.Topic>(), state.topics)
-        assertEquals(false, state.isLoading)
-        assertEquals("", state.searchQuery)
-    }
+    fun `initial state is correct`() =
+        runTest {
+            val state = viewModel.uiState.value
+            assertEquals(emptyList<com.example.learnapp.domain.model.Topic>(), state.topics)
+            assertEquals(false, state.isLoading)
+            assertEquals("", state.searchQuery)
+        }
 
     @Test
-    fun `search query change updates state`() = runTest {
-        viewModel.onSearchQueryChange("Compose")
-        assertEquals("Compose", viewModel.uiState.value.searchQuery)
-    }
+    fun `search query change updates state`() =
+        runTest {
+            viewModel.onSearchQueryChange("Compose")
+            assertEquals("Compose", viewModel.uiState.value.searchQuery)
+        }
 }

@@ -23,69 +23,51 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext context: Context,
+    ): AppDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabase.DATABASE_NAME,
+            ).build()
+
+    @Provides
+    fun provideProgressDao(database: AppDatabase): ProgressDao = database.progressDao()
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            AppDatabase.DATABASE_NAME
-        ).build()
-    }
-
-    @Provides
-    fun provideProgressDao(database: AppDatabase): ProgressDao {
-        return database.progressDao()
-    }
+    fun provideLearningRepository(progressDao: ProgressDao): LearningRepository = LearningRepositoryImpl(progressDao)
 
     @Provides
     @Singleton
-    fun provideLearningRepository(
-        progressDao: ProgressDao
-    ): LearningRepository {
-        return LearningRepositoryImpl(progressDao)
-    }
+    fun provideGetAllTopicsUseCase(repository: LearningRepository): GetAllTopicsUseCase = GetAllTopicsUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetAllTopicsUseCase(repository: LearningRepository): GetAllTopicsUseCase {
-        return GetAllTopicsUseCase(repository)
-    }
+    fun provideGetTopicByIdUseCase(repository: LearningRepository): GetTopicByIdUseCase = GetTopicByIdUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetTopicByIdUseCase(repository: LearningRepository): GetTopicByIdUseCase {
-        return GetTopicByIdUseCase(repository)
-    }
+    fun provideGetLessonByIdUseCase(repository: LearningRepository): GetLessonByIdUseCase = GetLessonByIdUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetLessonByIdUseCase(repository: LearningRepository): GetLessonByIdUseCase {
-        return GetLessonByIdUseCase(repository)
-    }
+    fun provideObserveProgressUseCase(repository: LearningRepository): ObserveProgressUseCase = ObserveProgressUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideObserveProgressUseCase(repository: LearningRepository): ObserveProgressUseCase {
-        return ObserveProgressUseCase(repository)
-    }
+    fun provideMarkLessonCompleteUseCase(repository: LearningRepository): MarkLessonCompleteUseCase = MarkLessonCompleteUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideMarkLessonCompleteUseCase(repository: LearningRepository): MarkLessonCompleteUseCase {
-        return MarkLessonCompleteUseCase(repository)
-    }
+    fun provideMarkLessonIncompleteUseCase(repository: LearningRepository): MarkLessonIncompleteUseCase =
+        MarkLessonIncompleteUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideMarkLessonIncompleteUseCase(repository: LearningRepository): MarkLessonIncompleteUseCase {
-        return MarkLessonIncompleteUseCase(repository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideClearProgressUseCase(repository: LearningRepository): ClearProgressUseCase {
-        return ClearProgressUseCase(repository)
-    }
+    fun provideClearProgressUseCase(repository: LearningRepository): ClearProgressUseCase = ClearProgressUseCase(repository)
 }
