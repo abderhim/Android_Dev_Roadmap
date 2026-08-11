@@ -1,0 +1,13 @@
+[*.{kt,kts}]
+# Android-specific rules
+max_line_length = 500
+indent_size = 4
+continuation_indent_size = 8
+
+# Disable naming rules for Composables (which start with Uppercase)
+ktlint_standard_function-naming = disabled
+# Disable backing property rules if needed, but better to fix them
+ktlint_standard_backing-property-naming = disabled
+
+# Disable expression body rule
+ktlint_standard_function-expression-body = disabled

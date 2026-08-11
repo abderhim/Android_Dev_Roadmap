@@ -9,26 +9,46 @@ plugins {
 }
 
 android {
-    namespace = "com.example.learnapp"
+    namespace = "com.example.android_dev_roadmap"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.learnapp"
+        applicationId = "com.example.android_dev_roadmap"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(project.findProperty("ANDROID_DEV_ROADMAP_RELEASE_STORE_FILE") ?: "release.keystore")
+            storePassword = project.findProperty("ANDROID_DEV_ROADMAP_RELEASE_STORE_PASSWORD") as String?
+            keyAlias = project.findProperty("ANDROID_DEV_ROADMAP_RELEASE_KEY_ALIAS") as String?
+            keyPassword = project.findProperty("ANDROID_DEV_ROADMAP_RELEASE_KEY_PASSWORD") as String?
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+        }
+        
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
         }
     }
     compileOptions {
@@ -49,9 +69,10 @@ android {
 }
 
 ktlint {
-    android.set(true)
-    outputToConsole.set(true)
-    ignoreFailures.set(false)
+    android = true
+    outputToConsole = true
+    ignoreFailures = false
+    enableExperimentalRules = true
 }
 
 dependencies {

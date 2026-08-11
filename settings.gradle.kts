@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "learn app"
+rootProject.name = "Android_Dev_Roadmap"
 include(":app")
  
