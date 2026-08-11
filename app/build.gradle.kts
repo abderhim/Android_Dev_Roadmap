@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.android_dev_roadmap"
+    namespace = "com.abderrahim.android_dev_roadmap"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.android_dev_roadmap"
+        applicationId = "com.abderrahim.android_dev_roadmap"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
